@@ -15,8 +15,12 @@ export default function Header() {
 
       {/* Navigation Menu */}
       <ul className='flex list-none w-full justify-center items-center gap-x-14 text-sm capitalize'>
-      <li className=' cursor-pointer border-b-2 border-gray-50 hover:border-b-blue-400 transition-all duration-300'>offres d'emploi</li>
-        <li className=' cursor-pointer border-b-2 border-gray-50 hover:border-b-blue-400 transition-all duration-300'>espace stagaire</li>
+      <li className=' cursor-pointer border-b-2 border-gray-50 hover:border-b-blue-400 transition-all duration-300'>
+       <Link to={'/stages'}>offres de stages</Link>
+        </li>
+        <li className=' cursor-pointer border-b-2 border-gray-50 hover:border-b-blue-400 transition-all duration-300'>
+         <Link to={'/stagaire/inscription'}> espace stagaire </Link>
+        </li>
       <li className=' cursor-pointer border-b-2 border-gray-50 hover:border-b-blue-400 transition-all duration-300'>espace recruteur</li>
       </ul>
 
@@ -30,21 +34,21 @@ export default function Header() {
         
 
       </li>
-      <li className={`${popup? 'transition-all duration-300  absolute right-45 top-19 bg-white text-black h-auto w-44 rounded-2xl !pt-2 !pb-1':'hidden'    } `}>
+      <li className={`${popup? 'transition-all duration-300  absolute right-45 top-19 bg-white text-black h-auto w-44 rounded-2xl !pt-2 !pb-1 border-2 border-gray-200':'hidden'    } `}>
         <ul className='flex flex-col gap-y-1'>
            <li className='text-[12px] !p-2 text-gray-400'>espace stagaire</li>
 <li className='hover:bg-gray-200 transition-all duration-300 !p-2'>
-  <Link className='text-[13px] first-letter:uppercase'><span>tableau</span>  de bord</Link>
+  <Link to={'/stagaire/dashboard/'} className='text-[13px] first-letter:capitalize' onClick={()=>setPopup(false)}>tableau de bord</Link>
 </li>
 
 <li className='hover:bg-gray-200 transition-all duration-300 !p-2'>
-  <Link className='text-[13px] first-letter:uppercase'>parametres</Link>
+  <Link to={'/utilisateur/profil/'} className='text-[13px] first-letter:capitalize' onClick={()=>setPopup(false)}>parametres</Link>
 </li>
 
 <li className='hover:bg-gray-200 border-t-1 border-gray-300 transition-all duration-300 !p-2 flex justify-start gap-x-1 items-center'>
   <ArrowRightOnRectangleIcon className="w-5 h-5 text-gray-600" />
 
-  <Link className='text-[13px] first-letter:uppercase'> se deconnecter</Link>
+  <Link className='text-[13px] first-letter:uppercase' onClick={()=>setPopup(false)}> se deconnecter</Link>
 </li>
 
 

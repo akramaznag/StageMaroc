@@ -11,6 +11,8 @@ import InternProfileUpdate from './components/Intern/InternProfileUpdate';
 import Internships from './components/internships';
 import InternshipDetails from './components/InternshipDetails';
 import Settings from './components/Settings';
+import Applications from './components/Intern/Applications';
+import ApplicationDetails from './components/Intern/ApplicationDetails';
 const router = createBrowserRouter([
     {
       path: '/',
@@ -45,6 +47,14 @@ const router = createBrowserRouter([
               {
                 path:'profile/',
                 element:<InternProfileUpdate/>
+              },
+              {
+                path:'candidatures/',
+                element:<Applications/>
+              },
+              {
+                path:'candidatures/details/',
+                element:<ApplicationDetails/>
               }
             ]
           }
