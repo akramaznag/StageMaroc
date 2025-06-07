@@ -178,9 +178,9 @@ export default function InternshipDetails() {
                                     </div>
 
                                 </div>
-                                <div className='flex justify-between w-full  h-auto !my-2'>
-                                    <button type='reset'  className='bg-gray-400 flex justify-center items-center capitalize !py-3 !px-5 rounded-lg text-white transition-all duration-100' onClick={()=>ClosePopUp()}>annuler</button>
-                                    <button type='submit' className='bg-blue-500 flex justify-center items-center capitalize !py-3 !px-5 rounded-lg text-white hover:bg-blue-400 transition-all duration-100'>envoyer</button>
+                                 <div className='flex justify-end w-full gap-x-3 absolute bottom-0 !px-5 !py-4 right-0 h-auto'>
+                                   <button type='reset'  className='text-black text-sm bg-white flex justify-center items-center capitalize !py-3 !px-4 rounded-lg  transition-all duration-100  hover:bg-gray-100 ' onClick={()=>ClosePopUp()}>annuler</button>
+                                   <button type='submit' className='text-sm bg-blue-500 flex justify-center items-center capitalize !py-3 !px-4 rounded-lg text-white hover:bg-blue-400 transition-all duration-100'>enregistrer</button>
                                 </div>
                             </form>
                         </div>
