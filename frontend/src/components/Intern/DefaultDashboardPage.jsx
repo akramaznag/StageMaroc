@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   HomeIcon,
   IdentificationIcon,
@@ -14,7 +14,29 @@ import {
   BuildingOfficeIcon
 } from '@heroicons/react/24/outline';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 export default function DefaultDashboardPage() {
+  const [internship_preferences,setInternship_preferences]=useState()
+  const [specialty,setSpecialty]=useState()
+  const [city,setCity]=useState();
+
+  const token=sessionStorage.getItem('token')
+  useEffect(()=>{
+      axios.get('http://127.0.0.1:8000/api/intern_profile/index',{
+    headers:{
+      Authorization:`bearer ${token}`
+    }
+  }).then(res=>{
+    setInternship_preferences(res.data.internship_preference);
+    setSpecialty(res.data.specialty);
+    setCity(res.data.internship_preference_city);
+  }).catch(err=>console.log(err))
+
+  }
+  
+  ,[])
+  console.log(internship_preferences)
+  
   return (
     <>
      {/* Main Dashboard Cards */}
@@ -74,7 +96,7 @@ export default function DefaultDashboardPage() {
                     <BriefcaseIcon className='h-8 w-8 text-slate-400' />
                     <div className='flex flex-col'>
                       <div className='text-sm capitalize text-slate-600'>type de stage</div>
-                      <div className='text-sm capitalize font-bold'>stage pre-emauche</div>
+                      <div className='text-sm capitalize font-bold'>{internship_preferences?.contract}</div>
                     </div>
                   </div>
 
@@ -83,7 +105,7 @@ export default function DefaultDashboardPage() {
                     <CalendarIcon className='h-8 w-8 text-slate-400' />
                     <div className='flex flex-col'>
                       <div className='text-sm capitalize text-slate-600'>Stage à partir du</div>
-                      <div className='text-sm capitalize font-bold'>16/05/2025</div>
+                      <div className='text-sm capitalize font-bold'>{internship_preferences?.duration}</div>
                     </div>
                   </div>
 
@@ -92,7 +114,7 @@ export default function DefaultDashboardPage() {
                     <BookOpenIcon className='h-8 w-8 text-slate-400' />
                     <div className='flex flex-col'>
                       <div className='text-sm capitalize text-slate-600'>spécialité</div>
-                      <div className='text-sm capitalize font-bold'>informatique</div>
+                      <div className='text-sm capitalize font-bold'>{specialty}</div>
                     </div>
                   </div>
 
@@ -101,7 +123,7 @@ export default function DefaultDashboardPage() {
                     <MapPinIcon className='h-8 w-8 text-slate-400' />
                     <div className='flex flex-col'>
                       <div className='text-sm capitalize text-slate-600'>Ville</div>
-                      <div className='text-sm capitalize font-bold'>casablanca</div>
+                      <div className='text-sm capitalize font-bold'>{city}</div>
                     </div>
                   </div>
 
@@ -110,7 +132,7 @@ export default function DefaultDashboardPage() {
                     <ClockIcon className='h-8 w-8 text-slate-400' />
                     <div className='flex flex-col'>
                       <div className='text-sm capitalize text-slate-600'>Durée</div>
-                      <div className='text-sm capitalize font-bold'>3 mois</div>
+                      <div className='text-sm capitalize font-bold'>{internship_preferences?.duration}</div>
                     </div>
                   </div>
                 </div>

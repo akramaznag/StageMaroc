@@ -1,0 +1,101 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\City;
+use App\Models\EducationLevel;
+use App\Models\InternProfile;
+use App\Models\InternshipPreference;
+use App\Models\School;
+use App\Models\Specialty;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Models\User;
+
+
+class InternProfileController extends Controller
+{
+    public function create_profile(Request $request){
+     $request->validate([
+        'education_level_id' => 'required|exists:education_levels,id',
+        'specialty_id' => 'required|exists:specialties,id',
+        // 'contract' => 'required|in:stage fin étude,stage opérationnel, stage pré embauche',
+        'start_date' => 'required|date',
+        // 'duration' => 'required|in:1 mois,1 - 3 mois,3 - 6 mois,> 6 mois',
+        'city_id' => 'required|exists:cities,id',
+    ]);
+
+    $intern = User::where('id',Auth::user()->id)->first();
+
+
+    $intern_profile = InternProfile::create([
+        'user_id' => $intern->id,
+        'education_level_id' => $request->education_level_id,
+        'specialty_id' => $request->specialty_id,
+    ]);
+
+    $internship_preference = InternshipPreference::create([
+        'intern_profile_id' => $intern_profile->id,
+        'contract' => $request->contract,
+        'start_date' => $request->start_date,
+        'duration' => $request->duration,
+        'city_id' => $request->city_id,
+    ]);
+
+    return response()->json([
+    'user' => [
+            'id'         => $intern->id,
+            'email'      => $intern->email,
+            'phone'      => $intern->phone,
+            'role'       => $intern->role,
+            'first_name' =>$intern->first_name,
+            'last_name'  => $intern->last_name,
+            'full_name'  => $intern->getFullName(),
+            'created_at' => $intern->created_at,
+            'has_intern_profile'=>$intern->hasInternProfile()
+        ],
+    'message' => 'Profile and internship preferences created successfully',
+    'intern_profile' => $intern_profile,
+    'internship_preference' => $internship_preference,
+    'authorisation' => [
+        'token' => Auth::refresh(), 
+        'type' => 'bearer',
+    ],
+], 201);
+
+    }
+    public function index(){
+        $intern_profile=InternProfile::where('user_id',Auth::user()->id)->first();
+        $internship_preference=InternshipPreference::where('intern_profile_id',$intern_profile->id)->first();
+         return response()->json([
+            'internship_preference' => $internship_preference,
+            'specialty'=>$intern_profile->specialty->specialite,
+            'internship_preference_city'=>$internship_preference->city->name
+        ], 201);
+        
+    }
+    public function getInternProfileAndMetadata(){
+        $intern_profile=InternProfile::where('user_id',Auth::user()->id)->first();
+        $cities=City::get();
+        $specialties=Specialty::get();
+        $education_levels=EducationLevel::get();
+        $intern_ship_preferences=InternshipPreference::where('intern_profile_id',$intern_profile->id)->first();
+        $schools = School::orderBy('type', 'asc')->orderBy('short_name', 'asc')->get();
+         return response()->json([
+        'success' => true,
+        'message' => 'Intern profile and reference data retrieved successfully.',
+        'data' => [
+            'intern_profile' => $intern_profile,
+            'cities' => $cities,
+            'specialties' => $specialties,
+            'education_levels' => $education_levels,
+            'intern_ship_preferences'=>$intern_ship_preferences,
+            'schools'=>$schools
+        ]
+    ], 200);
+        
+
+
+
+    }
+}

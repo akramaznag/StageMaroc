@@ -90,9 +90,9 @@ export default function Settings() {
                     <input type={showPassword? "text":"password"} className='bg-white border-2 !py-2.5 !px-2 rounded-lg w-full text-sm   border-gray-300 focus:border-blue-700 focus:outline-none'/>
                     {
                       showPassword ?
-                       <EyeSlashIcon onClick={()=>setShowPassword(false)} className='cursor-pointer absolute left-[63.5%] top-[92.5%] w-7 h-7 !p-1.5 bg-blue-200 rounded-full'/>
+                       <EyeSlashIcon onClick={()=>setShowPassword(false)} className='cursor-pointer absolute left-[63.5%] top-[88.5%]  w-7 h-7 !p-1.5 bg-blue-200 rounded-full'/>
                                    :
-                                   <EyeIcon onClick={()=>setShowPassword(true)} className='cursor-pointer absolute left-[63.5%] top-[92.5%] w-7 h-7 !p-1.5 bg-blue-200 rounded-full'/>
+                                   <EyeIcon onClick={()=>setShowPassword(true)} className='cursor-pointer absolute left-[63.5%] top-[88.5%] w-7 h-7 !p-1.5 bg-blue-200 rounded-full'/>
                       
 
                     }
@@ -104,9 +104,9 @@ export default function Settings() {
                     <input type={showConfirmPassword? "text": "password"} className='bg-white border-2 !py-2.5 !px-2 rounded-lg w-full text-sm   border-gray-300 focus:border-blue-700 focus:outline-none'/>
                          {
                       showConfirmPassword ?
-                       <EyeSlashIcon onClick={()=>setShowConfirmPassword(false)} className='cursor-pointer absolute left-[87.8%] top-[92.5%] w-7 h-7 !p-1.5 bg-blue-200 rounded-full'/>
+                       <EyeSlashIcon onClick={()=>setShowConfirmPassword(false)} className='cursor-pointer absolute left-[87.8%] top-[88.5%] w-7 h-7 !p-1.5 bg-blue-200 rounded-full'/>
                                    :
-                        <EyeIcon onClick={()=>setShowConfirmPassword(true)} className='cursor-pointer absolute left-[87.8%] top-[92.5%] w-7 h-7 !p-1.5 bg-blue-200 rounded-full'/>
+                        <EyeIcon onClick={()=>setShowConfirmPassword(true)} className='cursor-pointer absolute left-[87.8%] top-[88.5%] w-7 h-7 !p-1.5 bg-blue-200 rounded-full'/>
       
                     }
                   </div>
