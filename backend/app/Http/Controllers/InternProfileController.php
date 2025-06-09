@@ -98,4 +98,44 @@ class InternProfileController extends Controller
 
 
     }
+    public function update_profile(Request $request,int $id){
+         $request->validate([
+        'statut' => 'required',
+        'school_id' => 'required|exists:schools,id',
+        'education_level_id' => 'required|exists:education_levels,id',
+        'specialty_id' => 'required|exists:specialties,id',
+        'presentation' => 'required|string',
+        'telephone' => 'required|string',
+        'cv_path' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
+
+        'contract' => 'required|string',
+        'city_id' => 'required|exists:cities,id',
+        'start_date' => 'required|date',
+        'duration' => 'required|string',
+    ]);
+
+    $intern = InternProfile::findOrFail($id);
+    $intern->update($request->only([
+        'statut', 'school_id', 'education_level_id', 'specialty_id', 'presentation', 'telephone'
+    ]));
+
+    if ($request->hasFile('cv_path')) {
+        $file = $request->file('cv_path');
+        $path = $file->store('cvs', 'public');
+        $intern->cv_path = $path;
+        $intern->save();
+    }
+
+    // Update or create internship preference
+    InternshipPreference::updateOrCreate(
+        ['intern_profile_id' => $intern->id],
+        $request->only(['contract', 'city_id', 'start_date', 'duration'])
+    );
+
+    return response()->json([
+        'message' => 'Profile updated successfully',
+        'data'=>$intern
+]);
+
+    }
 }

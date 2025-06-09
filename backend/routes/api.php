@@ -18,13 +18,15 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware(middleware: ['auth:api']);
 Route::post('/refresh', [AuthController::class, 'refresh'])->middleware(['auth:api']);
+
+//user route
+Route::middleware(['auth:api'])->prefix('user')->group(function () {
+    Route::patch('/update_infos', [AuthController::class, 'update_infos']);
+});
 Route::middleware(['auth:api', 'role:intern'])->prefix('intern')->group(function () {
     Route::post('/create_profile', [InternController::class, 'createProfile']);
 });
-//education levels api
-Route::middleware(['auth:api', 'role:intern,recruiter'])->prefix('education_level')->group(function () {
-    Route::get('/', [EducationLevel::class, 'index']);
-});
+
 //specialties api
 Route::middleware(['auth:api', 'role:intern,recruiter'])->prefix('specialties')->group(function () {
     Route::get('/', [SpecialtyController::class, 'index']);
@@ -39,4 +41,5 @@ Route::middleware(['auth:api', 'role:intern'])->prefix('intern_profile')->group(
     Route::post('/create', [InternProfileController::class, 'create_profile']);
     Route::get('/index', [InternProfileController::class, 'index']);
     Route::get('/getInternProfileAndMetadata', [InternProfileController::class, 'getInternProfileAndMetadata']);
+    Route::patch('/update/{id}',[InternProfileController::class,'update_profile']);
 });
