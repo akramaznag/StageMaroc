@@ -16,7 +16,6 @@ class InternProfile extends Model
     protected $fillable = [
         'user_id',
         'statut',
-        'school',
         'education_level_id',
         'specialty_id',
         'presentation',

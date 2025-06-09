@@ -44,6 +44,7 @@ export default function InternLogin() {
         if (err.response) {
           errors.push(err.response.data.message || 'Login failed')
           setErrors(errors);
+          setLoading(false)
         } else {
           errors.push('Network error')
           setErrors(errors);
