@@ -57,7 +57,7 @@ export default function InternLogin() {
 
   return (
     <div className='flex justify-center'>
-      <div className='min-h-screen !mt-[250px] w-[470px]'>
+      <div className='h-[500px] !mt-[250px] w-[470px]'>
         <div className='text-gray-500 text-2xl text-center uppercase !mb-5'>espace stagaire</div>
 
         {/* register container */}

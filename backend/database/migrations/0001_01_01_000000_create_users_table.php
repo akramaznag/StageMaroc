@@ -21,7 +21,7 @@ return new class extends Migration
             $table->enum('role',['intern','recruiter','admin'])->default('intern');
             $table->string('phone',10)->unique();
             $table->string('photo')->nullable(true);
-
+            $table->softDeletes();
             $table->rememberToken();
             $table->timestamps();
         });

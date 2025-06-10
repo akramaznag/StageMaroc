@@ -79,12 +79,14 @@ class AuthController extends Controller
         'status' => 'success',
          'user' => [
             'id'         => $user->id,
+            'photo'       => $user->photo,
             'email'      => $user->email,
             'phone'      => $user->phone,
             'role'       => $user->role,
             'first_name' =>$user->first_name,
             'last_name'  => $user->last_name,
             'full_name'  => $user->getFullName(),
+            
             'created_at' => $user->created_at,
             'has_intern_profile'=>$user->hasInternProfile()
          ],
@@ -120,37 +122,108 @@ class AuthController extends Controller
         'phone'      => 'required|string|size:10|unique:users,phone,' .$user->id,
       ]);
 
-    if ($validator->fails()) {
+                if ($validator->fails()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Validation errors',
+                        'errors' => $validator->errors()
+                    ], 422);
+                }
+
+                
+            
+                $updated_User = User::updateOrCreate(
+                    ['id' => $user->id],
+                    $request->only(['first_name', 'last_name', 'email', 'phone'])
+                );
+
+                if ($request->hasFile('photo')) {
+                    $file = $request->file('photo');
+                    $path = $file->store('photos', 'public');
+                    $updated_User->photo = $path;
+                    $updated_User->save();
+                }
+
+            return response()->json([
+                'status' => 'success',
+                'status_code' => 200,
+                'message' => 'User updated successfully!',
+                'user' => [
+                        'id'         => $updated_User->id,
+                        'photo'       => $updated_User->photo,
+                        'email'      => $updated_User->email,
+                        'phone'      => $updated_User->phone,
+                        'role'       => $updated_User->role,
+                        'first_name' =>$updated_User->first_name,
+                        'last_name'  => $updated_User->last_name,
+                        'full_name'  => $updated_User->getFullName(),
+                        
+                        'created_at' => $updated_User->created_at,
+                        'has_intern_profile'=>$updated_User->hasInternProfile()
+                    ],
+            ], 200);
+
+
+
+
+    }
+    public function update_password(Request $request ){
+        $user = User::where('id',Auth::user()->id)->first();
+        $validator = Validator::make($request->all(), [
+        'password' => 'required|string',
+        'new_password' => 'required|string|min:8',
+    ]);
+    if (!Hash::check($request->password, $user->password)) {
         return response()->json([
-            'success' => false,
-            'message' => 'Validation errors',
-            'errors' => $validator->errors()
+            'message' => 'Current password is incorrect.',
+        ], 403);
+    }
+
+     if ($validator->fails()) {
+        return response()->json([
+            'errors' => $validator->errors(),
         ], 422);
     }
 
-    
-  
-    $updated_User = User::updateOrCreate(
-        ['id' => $user->id],
-        $request->only(['first_name', 'last_name', 'email', 'phone'])
-    );
+    $user->password = Hash::make($request->new_password);
+    $user->save();
 
-    if ($request->hasFile('photo')) {
-        $file = $request->file('photo');
-        $path = $file->store('photos', 'public');
-        $updated_User->photo = $path;
-        $updated_User->save();
+    return response()->json([
+        'status'=>'success',
+        'status_code'=>200,
+        'message' => 'Password updated successfully.',
+        'user' => [
+                    'id'         => $user->id,
+                    'photo'       => $user->photo,
+                    'email'      => $user->email,
+                    'phone'      => $user->phone,
+                    'role'       => $user->role,
+                    'first_name' =>$user->first_name,
+                    'last_name'  => $user->last_name,
+                    'full_name'  => $user->getFullName(),
+                    
+                    'created_at' => $user->created_at,
+                    'has_intern_profile'=>$user->hasInternProfile()
+                    ],
+
+    ],200);
+
     }
+    public function delete_user(Request $request){
+         $user = User::where('id',Auth::user()->id)->first();
+        if (!Hash::check($request->password, $user->password)) {
+            return response()->json([
+                'message' => 'Current password is incorrect.',
+            ], 403);
+        }
+        $user->delete();
+        Auth::logout();
 
-return response()->json([
-    'status' => 'success',
-    'status_code' => 200,
-    'message' => 'User updated successfully!',
-    'user' => $updated_User,
-], 200);
-
-
-
+        return response()->json([
+        'status'=>true,
+        'status_code'=>200,
+        'message' => 'User account deleted successfully.',
+    ]);
 
     }
 

@@ -138,9 +138,14 @@ export default function Header() {
       <>
           
       <li className='w-full flex justify-end gap-x-4'>
-         <div onClick={()=>{  setAccountPopup(prev=>!prev)}} className='cursor-pointer outline-none h-8 w-8 border-2 border-gray-100 rounded-full !p-5 uppercase bg-blue-100 flex justify-center items-center'>
+        {
+          user.photo?
+          <img src={`http://127.0.0.1:8000/storage/${user.photo}`} onClick={()=>{  setAccountPopup(prev=>!prev)}} className='cursor-pointer outline-none h-8 w-8 border-2 border-gray-100 rounded-full '/>
+           :
+        <div onClick={()=>{  setAccountPopup(prev=>!prev)}} className='cursor-pointer outline-none h-8 w-8 border-2 border-gray-100 rounded-full !p-5 uppercase bg-blue-100 flex justify-center items-center'>
           <div className='text-sm text-gray-500 uppercase'><span>{user.first_name.charAt(0)}</span><span>{user.last_name.charAt(0)}</span></div>
         </div>
+        }
         
 
       </li>
