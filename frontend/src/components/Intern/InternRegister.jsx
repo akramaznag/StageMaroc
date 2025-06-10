@@ -85,7 +85,7 @@ export default function InternRegister() {
 
   return (
     <div className='flex justify-center'>
-      <div className='min-h-screen !mt-[250px] w-[470px]'>
+      <div className='h-[500px] !mt-[250px] w-[470px]'>
         <div className='text-gray-500 text-xl text-center uppercase !mb-5'>espace candidat</div>
 
         {/* Register container */}

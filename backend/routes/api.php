@@ -13,7 +13,7 @@ Route::middleware('api')->get('/test', function (Request $request) {
     return response()->json(['message' => 'API is working']);
 });
 
-// User registration route
+// Auth routes
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware(middleware: ['auth:api']);
@@ -22,10 +22,16 @@ Route::post('/refresh', [AuthController::class, 'refresh'])->middleware(['auth:a
 //user route
 Route::middleware(['auth:api'])->prefix('user')->group(function () {
     Route::patch('/update_infos', [AuthController::class, 'update_infos']);
+    Route::post('/update_password', [AuthController::class, 'update_password']);
+    Route::post('/delete',[AuthController::class,'delete_user']);
+
 });
-Route::middleware(['auth:api', 'role:intern'])->prefix('intern')->group(function () {
-    Route::post('/create_profile', [InternController::class, 'createProfile']);
+
+//education_level
+Route::middleware(['auth:api'])->prefix('education_level')->group(function () {
+    Route::get('/', [EducationLevel::class, 'index']);
 });
+
 
 //specialties api
 Route::middleware(['auth:api', 'role:intern,recruiter'])->prefix('specialties')->group(function () {
