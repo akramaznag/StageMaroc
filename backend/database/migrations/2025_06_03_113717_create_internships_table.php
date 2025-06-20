@@ -17,13 +17,14 @@ return new class extends Migration
             $table->enum('type', ['onsite', 'remote', 'hybrid'])->default('onsite'); 
             
      
-            $table->enum('contract', ['stage fin étude',"stage opérationnel",' stage pré embauche']); // Can be extended
+            $table->enum('contract', ['stage fin étude', 'stage opérationnel', 'stage pré embauche']);   
             $table->date('start_date'); // "Démarrage"
-            $table->enum('duration', ['1 mois','1 - 3 mois', '3 - 6 mois', '> 6 mois']); // "Durée"
-            $table->enum('remuneration',['0 dh','1000 dh','1000 - 2000 dh','> 2000 dh']); // in Dirhams
-            $table->enum('availability', ['temps_plein', 'temps_partiel']); // "Disponibilité"
+            $table->enum('duration', ['1 mois', '1 - 3 mois', '3 - 6 mois', '> 6 mois']);            $table->enum('remuneration',['0 dh','1000 dh','1000 - 2000 dh','> 2000 dh']); // in Dirhams
+            $table->enum('availability', ['fulltime', 'parttime']); // "Disponibilité"
             $table->integer('profile_count'); // "Profils"
             $table->longText('description'); // "Profils"
+            $table->enum('status', ['published', 'expired', 'declined'])->default('declined');
+
             $table->timestamps();
 
             // Foreign key constraints

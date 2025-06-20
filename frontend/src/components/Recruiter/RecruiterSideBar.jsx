@@ -1,7 +1,10 @@
 import { Link, useLocation } from 'react-router-dom';
 import { HomeIcon, IdentificationIcon, PaperAirplaneIcon, CalendarIcon, BuildingOfficeIcon,MegaphoneIcon } from '@heroicons/react/24/outline';
-
+import { useEffect } from 'react';
 export default function RecruiterSideBar() {
+  
+
+  console.log('test yes')
   const location = useLocation();
   const isActive = (path) => location.pathname === path;
 

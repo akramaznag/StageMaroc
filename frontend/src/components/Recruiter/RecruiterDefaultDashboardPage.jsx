@@ -20,8 +20,9 @@ import { Link } from 'react-router-dom';
 import { MegaphoneIcon } from '@heroicons/react/24/solid';
 export default function RecruiterDefaultDashboardPage() {
   return (
-    <>
+   <>
      {/* Main Dashboard Cards */}
+       {/* Main Dashboard Cards */}
           <div className='flex w-full gap-x-3.5 '>
             {/* Internship Count Card */}
             <div className='bg-white h-[200px] border-b-4 border-blue-500 shadow-blue-300 shadow-[0px_45px_45px_-50px] w-1/3 flex flex-col !pt-8 justify-between  items-center gap-y-1 rounded-lg'>
@@ -67,7 +68,7 @@ export default function RecruiterDefaultDashboardPage() {
           </div>
           
            {/* dashboard overview */}
-          <div className='bg-white  h-[300px] flex justify-center items-center  w-full border-1 border-white rounded-lg '>
+          <div className='bg-white h-[300px] flex justify-center items-center  w-full border-1 border-white rounded-lg '>
             {/* container */}
            <div className='w-[90%]  h-[250px] bg-red- flex gap-x-3'>           
              {/* who seen ur profile section */}

@@ -12,15 +12,22 @@ use Illuminate\Support\Facades\Validator;
 class AuthController extends Controller
 {
     public function register(Request $request){
-         $request->validate([
-        'first_name' => 'required|string|max:255',
-        'last_name' => 'required|string|max:255',
-        'email' => 'required|string|email|max:255|unique:users',
-        'password' => 'required|string|min:6',
-        'phone' => 'required|string|min:10|max:10',
-        'role' => 'required|string|in:intern,recruiter,admin',
+         $validator = Validator::make($request->all(), [
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:6',
+            'phone' => 'required|string|size:10',
+            'role' => 'required|string|in:intern,recruiter,admin',
+        ]);
 
-    ]);
+    if ($validator->fails()) {
+        return response()->json([
+            'status' => 'error',
+            'errors' => $validator->errors()
+        ], 422);
+    }
+
 
     // Create the user
      $user = User::create([
@@ -46,8 +53,9 @@ class AuthController extends Controller
             'first_name' =>$user->first_name,
             'last_name'  => $user->last_name,
             'full_name'  => $user->getFullName(),
+            'has_intern_profile'=>$user->hasInternProfile(),
+            'has_enterprise'=>$user->HasEnterprise(),
             'created_at' => $user->created_at,
-            'has_intern_profile'=>$user->hasInternProfile()
         ],
         'authorization' => [
             'token' => $token,
@@ -86,9 +94,9 @@ class AuthController extends Controller
             'first_name' =>$user->first_name,
             'last_name'  => $user->last_name,
             'full_name'  => $user->getFullName(),
-            
             'created_at' => $user->created_at,
-            'has_intern_profile'=>$user->hasInternProfile()
+            'has_intern_profile'=>$user->hasInternProfile(),
+            'has_enterprise'=>$user->HasEnterprise()
          ],
         'message'=>'user is logged successfully !',
         'authorization' => [

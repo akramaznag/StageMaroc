@@ -31,9 +31,8 @@ return new class extends Migration
             // My profile
             $table->longText('presentation')->nullable();
             $table->string('cv_path')->nullable();
-
+            $table->integer('profile_score')->default(3);
            
-
             $table->timestamps();
         });
     }

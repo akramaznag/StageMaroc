@@ -5,13 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\City;
 use App\Models\EducationLevel;
 use App\Models\InternProfile;
+use App\Models\InternshipApplication;
 use App\Models\InternshipPreference;
 use App\Models\School;
 use App\Models\Specialty;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
-
+use Illuminate\Support\Facades\Validator;
 
 class InternProfileController extends Controller
 {
@@ -70,8 +71,11 @@ class InternProfileController extends Controller
          return response()->json([
             'internship_preference' => $internship_preference,
             'specialty'=>$intern_profile->specialty->specialite,
-            'internship_preference_city'=>$internship_preference->city->name
-        ], 201);
+            'internship_preference_city'=>$internship_preference->city->name,
+            'intern_profile'=>$intern_profile,
+            'applications_count'=>InternshipApplication::where('intern_id',Auth::user()->id)->get()->count() 
+
+        ], 200);
         
     }
     public function getInternProfileAndMetadata(){
@@ -90,7 +94,8 @@ class InternProfileController extends Controller
             'specialties' => $specialties,
             'education_levels' => $education_levels,
             'intern_ship_preferences'=>$intern_ship_preferences,
-            'schools'=>$schools
+            'schools'=>$schools,
+            'profile_score'=>$intern_profile->profile_score
         ]
     ], 200);
         
@@ -112,11 +117,12 @@ class InternProfileController extends Controller
         'city_id' => 'required|exists:cities,id',
         'start_date' => 'required|date',
         'duration' => 'required|string',
+        'profile_score'=>'required|integer'
     ]);
 
     $intern = InternProfile::findOrFail($id);
     $intern->update($request->only([
-        'statut', 'school_id', 'education_level_id', 'specialty_id', 'presentation', 'telephone'
+        'statut', 'school_id', 'education_level_id', 'specialty_id', 'presentation', 'telephone','profile_score'
     ]));
 
     if ($request->hasFile('cv_path')) {
@@ -138,4 +144,44 @@ class InternProfileController extends Controller
 ]);
 
     }
+
+
+public function update_cv(Request $request)
+{
+    $validator = Validator::make($request->all(), [
+        'id' => 'required|integer|exists:users,id',
+        'cv_path' => 'required|file|mimes:pdf,doc,docx|max:2048',
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json([
+            'status' => 'error',
+            'errors' => $validator->errors(),
+        ], 422);
+    }
+
+    $data = $validator->validated();
+    $intern = InternProfile::find($data['id']);
+
+    if ($request->hasFile('cv_path')) {
+        $file = $request->file('cv_path');
+        $cvPath = $file->store('cvs', 'public');
+
+        $intern->cv_path = $cvPath;
+        $intern->save();
+    } else {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'No CV file was uploaded.'
+        ], 400);
+    }
+
+    return response()->json([
+        'status' => 'success',
+        'message' => 'CV uploaded successfully.',
+        'cv' => $cvPath
+    ]);
+}
+
+
 }

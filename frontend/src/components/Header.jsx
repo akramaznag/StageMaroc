@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { Link ,useLocation,useNavigate} from 'react-router-dom';
 import { ArrowRightOnRectangleIcon ,CheckCircleIcon,ChevronUpDownIcon } from '@heroicons/react/24/solid';
 import axios from 'axios';
@@ -11,25 +11,59 @@ export default function Header() {
    const user =JSON.parse(sessionStorage.getItem("user"));
    const location = useLocation();
    const basePath = location.pathname.startsWith('/recruteur') ? '/recruteur' : '/stagaire';
+   const [applicationDetails,setApplicationDetails]=useState([])
+   const [internships,setInternships]=useState([]);
+   const [enterprise_name,setEnterprisename]=useState()
    const navigate=useNavigate()
+   let role='';
    if(user){
-
-     const role=user.role==="intern"?"stagaire":"recruteur";
-   }
-   
-
-   const InternLogout=()=>{
-     axios.post('http://127.0.0.1:8000/api/logout',{},{
+     
+     role=user.role==="intern"?"stagaire":"recruteur";
+    }
+    const Logout=()=>{
+      axios.post('http://127.0.0.1:8000/api/logout',{},{
         headers:{
           Authorization:`bearer ${token}`
         }
       }).then(()=>{
-          sessionStorage.removeItem('token');
-          sessionStorage.removeItem('user');
-          navigate(`/stagaire/connexion`);
+        sessionStorage.removeItem('token');
+        sessionStorage.removeItem('user');
+        navigate(`/${role}/connexion`);
       }).catch(err=>console.log(err))
-   }
+    }
 
+     useEffect(() => {
+  if (user && user.role === 'recruiter') {
+    axios.get('http://127.0.0.1:8000/api/internship/list', {
+      headers: { Authorization: `bearer ${token}` }
+    }).then(res => {
+      setInternships(res.data.internships);
+    }).catch(err => console.log(err));
+  }
+}, []);
+
+useEffect(() => {
+  if (user && user.role === 'recruiter') {
+    axios.get('http://127.0.0.1:8000/api/internship_application/get_recruiter_applications', {
+      headers: { Authorization: `bearer ${token}` }
+    }).then(res => {
+      setApplicationDetails(res.data.applications);
+    }).catch(err => console.log('error caught', err));
+  }
+}, []);
+
+useEffect(() => {
+  if ( user && user.role === 'recruiter') {
+    axios.get("http://127.0.0.1:8000/api/enterprise/", {
+      headers: { Authorization: `bearer ${token}` }
+    }).then(res => {
+      setEnterprisename(res.data.enterprise.enterprise_name);
+    }).catch(err => console.log(err));
+  }
+}, []);
+
+    
+    
    return (
     <div onClick={()=>{
       Accountpopup?setAccountPopup(false):''
@@ -63,11 +97,11 @@ export default function Header() {
      
    
         <Link  to={'/recruteur/dashboard/candidatures/'} className='cursor-pointer bg-gray-50  rounded-lg !p-2 lowercase flex justify-center items-center gap-x-2'>
-         <div className='flex justify-center items-center !p-1 bg-gray-200 text-slate-700 rounded-full text-sm'>0</div>
+         <div className='flex justify-center items-center !p-1 bg-gray-200 text-slate-700 rounded-full text-sm'>{applicationDetails.length}</div>
          <div className='text-sm capitalize text-slate-500'>candidatures</div>
         </Link>
         <Link to={'/recruteur/dashboard/offres-stage/'} className='cursor-pointer bg-gray-50  rounded-lg !p-2 lowercase flex justify-center items-center gap-x-2'>
-         <div className='flex justify-center items-center !p-1 bg-gray-200 text-slate-700 rounded-full text-sm'>0</div>
+         <div className='flex justify-center items-center !p-1 bg-gray-200 text-slate-700 rounded-full text-sm'>{internships.length}</div>
          <div className='text-sm capitalize text-slate-500'>offres stages</div>
         </Link>
       
@@ -76,7 +110,7 @@ export default function Header() {
           setAccountPopup(false)
           }} className='cursor-pointer   rounded-lg !p-2 lowercase  flex  items-center'>
           <div className='flex w-full items-center gap-x-3'>
-           <div className='text-sm text-slate-900'> innov tech</div>
+           <div className='text-sm text-slate-900'>{enterprise_name}</div>
             <ChevronUpDownIcon className='w-4 h-4'/>
 
 
@@ -97,16 +131,16 @@ export default function Header() {
         Accountpopup &&
        <li className={`${Accountpopup? ' transition-all duration-300  absolute right-27 top-19 bg-white text-black h-auto w-44 rounded-2xl !pt-2 !pb-1 border-2 border-gray-200 shadow-md':'hidden'    } `}>
         <ul className='flex flex-col gap-y-1'>
-           <li className='text-[12px] !p-2 text-gray-400'>espace stagaire</li>
+           <li className='text-[12px] !p-2 text-gray-400'>espace recruteur</li>
            <li className='hover:bg-gray-200 transition-all duration-300 !p-2'>
-            <Link to={'/stagaire/dashboard/'} className='text-[13px] first-letter:capitalize' onClick={()=>setPopup(false)}>tableau de bord</Link>
+            <Link to={'/stagaire/dashboard/'} className='text-[13px] first-letter:capitalize' onClick={()=>setAccountPopup(false)}>tableau de bord</Link>
            </li>
            <li className='hover:bg-gray-200 transition-all duration-300 !p-2'>
-               <Link to={'/utilisateur/profil/'} className='text-[13px] first-letter:capitalize' onClick={()=>setPopup(false)}>parametres</Link>
+               <Link to={'/utilisateur/profil/'} className='text-[13px] first-letter:capitalize' onClick={()=>setAccountPopup(false)}>parametres</Link>
             </li>
-            <li className='hover:bg-gray-200 border-t-1 border-gray-300 transition-all duration-300 !p-2 flex justify-start gap-x-1 items-center'>
+            <li onClick={()=>{setPopup(false);Logout()}}className='hover:bg-gray-200 border-t-1 border-gray-300 transition-all duration-300 !p-2 flex justify-start gap-x-1 items-center'>
               <ArrowRightOnRectangleIcon className="w-5 h-5 text-gray-600" />
-              <Link className='text-[13px] first-letter:uppercase' onClick={()=>setPopup(false)}> se deconnecter</Link>
+              <div  className='text-[13px] first-letter:uppercase cursor-pointer' onClick={()=>{setAccountPopup(false);Logout()}}> se deconnecter</div>
             </li>
          </ul>
        </li>
@@ -126,7 +160,7 @@ export default function Header() {
                 setComapnyPopup(false)
               }}>
                 <CheckCircleIcon className='w-4 h-5 text-green-400'/>
-                <div className='text-sm first-letter:capitalize text-slate-700'>innov tech</div>
+                <div className='text-sm first-letter:capitalize text-slate-700'>{enterprise_name}</div>
               </Link>
             </li>
          </ul>
@@ -162,7 +196,7 @@ export default function Header() {
                   parametres
               </li>
             </Link>
-            <button className='hover:bg-gray-200 border-t-1 border-gray-300 transition-all duration-300 !p-2 ' onClick={InternLogout }>
+            <button className='hover:bg-gray-200 border-t-1 border-gray-300 transition-all duration-300 !p-2 ' onClick={Logout }>
                   <div className='flex justify-start gap-x-1 items-center'>
                      <ArrowRightOnRectangleIcon className="w-5 h-5 text-gray-600" />
                      <span className='text-[13px] first-letter:uppercase'>se deconnecter</span>  

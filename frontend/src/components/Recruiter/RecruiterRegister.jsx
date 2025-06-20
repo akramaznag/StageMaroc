@@ -1,16 +1,20 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
-
+import { Link, useNavigate } from 'react-router-dom'
+import Spinner from '../../Spinner'
+import axios from 'axios'
 export default function RecruiterRegister() {
+  const navigate=useNavigate();
   const [formData, setFormData] = useState({
     nom: '',
     prenom: '',
     email: '',
     motDePasse: '',
     telephone: '',
+    role:'recruiter'
   })
 
   const [errors, setErrors] = useState([])
+  const [Loading, setLoading] = useState(false)
 
   // Validation function
   const validateForm = () => {
@@ -53,10 +57,30 @@ export default function RecruiterRegister() {
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault()
+    setLoading(true)
     if (validateForm()) {
-      // Proceed with form submission (e.g., API call)
       console.log('Form submitted successfully', formData)
+      axios.post("http://127.0.0.1:8000/api/register",{first_name:formData.prenom,last_name:formData.nom,email:formData.email,password:formData.motDePasse,phone:formData.telephone,role:formData.role}).
+      then(res=>{ 
+        sessionStorage.setItem('user', JSON.stringify(res.data.user))
+        sessionStorage.setItem('token',res.data.authorization.token);
+        setLoading(false)
+        navigate('/recruteur/dashboard',{replace:true})
+
+        })
+      .catch(err => {
+  if (err.response?.data?.errors) {
+    console.log(err)
+    const validationErrors = Object.values(err.response.data.errors).flat();
+    setErrors(validationErrors);
+  }
+  setLoading(false);
+});
     }
+    else{
+      setLoading(false)
+    }
+ 
   }
 
   // Handle input changes
@@ -67,7 +91,7 @@ export default function RecruiterRegister() {
 
   return (
     <div className='flex justify-center'>
-      <div className='h-[500px] !mt-[250px] w-[470px]'>
+      <div className= {`${errors.length>0 ? 'h-[600px]' : 'h-[500px]'}  !mt-[250px] w-[470px]`}>
         <div className='text-gray-500 text-2xl text-center uppercase !mb-2'>espace recruteur</div>
         <div className='text-blue-400 text-sm text-center first-letter:capitalize !mb-5'>(Organismes seulement)</div>
 
@@ -150,7 +174,10 @@ export default function RecruiterRegister() {
             </div>
 
             <div className='col-start-2 flex flex-col items-end'>
-              <button type='submit' className='rounded-sm !py-2 !px-4 cursor-pointer transition-all duration-300 bg-black text-white text-sm hover:bg-gray-700'>s'inscrire</button>
+              <button type='submit' className={`rounded-sm !py-2 !px-4 cursor-pointer transition-all duration-300 bg-black text-white text-sm hover:bg-gray-700  ${Loading && 'flex gap-x-2'}`}>
+                  { Loading && <Spinner/> }
+                    <span> s'inscrire</span>
+              </button>
             </div>
           </form>
         </div>
