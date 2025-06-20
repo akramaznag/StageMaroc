@@ -17,18 +17,22 @@ import {
 import { Link } from 'react-router-dom';
 import RecruiterSideBar from './RecruiterSideBar';
 import RecruiterDashboardLayout from './RecruiterDashboardLayout';
+import RecruiterLayOut from './RecruiterLayOut';
 export default function RecruiterDashboard() {
   return (
     <div className='flex justify-center'>
       {/* Container wrapper */}
       <div className='!my-[130px]  w-[85%] '>
-        <div className='bg-red  grid grid-cols-4  auto-rows-min max-h-[800px]  gap-x-8 w-full  '>
+       <div className='bg-red  grid grid-cols-4  auto-rows-min max-h-[800px]  gap-x-8 w-full  '>
 
           {/* Recruiter Sidebar */}
          <RecruiterSideBar/>
           
           {/* Recruiter content */}
+          <>
           <RecruiterDashboardLayout/>
+          </>
+       
               
 
         </div>

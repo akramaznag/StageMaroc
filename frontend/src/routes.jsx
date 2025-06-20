@@ -28,6 +28,12 @@ import PrivateRoute from './PrivateRoute';
 import RequireProfileRoute from './components/Intern/RequireProfileRoute';
 import PublicRoute from './PublicRoute';
 import RequireNoProfileRoute from './components/Intern/RequireNoProfileRoute';
+import RecruiterSideBar from './components/Recruiter/RecruiterSideBar';
+import Test from './test';
+import RecruiterDashboardLayout from './components/Recruiter/RecruiterDashboardLayout';
+import RequireEnterpriseRoute from './components/Recruiter/RequireEnterpriseRoute';
+import RequireNoEnterprise from './components/Recruiter/RequireNoEnterprise';
+import UpdateInternshipOffer from './components/Recruiter/UpdateInternship';
 const router = createBrowserRouter([
     {
       path: '/',
@@ -47,46 +53,57 @@ const router = createBrowserRouter([
               element: <PublicRoute children={  <RecruiterLogin/>}/>
           },
           
-          {
-            element:<PrivateRoute allowedRoles={['recruiter']}/>,
-            children:[
+          
+          
 
-              {
-                path:'creer_entreprise/',
-                element:<RecruiterRegister2/>
-              },
-              {
-                path:'dashboard/',
-                children:[
+          {
+            element :<PrivateRoute allowedRoles={['recruiter']}/>,
+            children:[
                   {
-                    index:true,
-                    element:<RecruiterDefaultDashboardPage/>,                               
+                    path:'creer_entreprise/',
+                    element: <RequireNoEnterprise children={ <RecruiterRegister2/>}/>
                   },
-                
+
                   {
-                    path:'candidatures/',
-                    element:<ReceivedApplication/>
-                  },
-                  {
-                    path:'candidatures/details/',
-                    element:<RecruiterApplicationDetails/>
-                  },
-                  {
-                    path:'entreprise/',
-                    element:<UpdateEnterprise/>
-                  },
-                  {
-                    path:'offre-stage/',
-                    element:<CreateInternshipOffer/>
-                  },
-                  {
-                    path:'offres-stage/',
-                    element:<RecruiterInternships/>
+                    path:'dashboard/',
+                    element: <RequireEnterpriseRoute children={<RecruiterDashboard />}/>, // This is your layout wrapper
+    
+                    children:[
+                      {
+                        index:true,
+                        element:<RecruiterDefaultDashboardPage/>,                               
+                      },
+                    
+                      {
+                        path:'candidatures/',
+                        element:<ReceivedApplication/>
+                      },
+                      // {
+                      //   path:'candidatures/details/',
+                      //   element:<RecruiterApplicationDetails/>
+                      // },
+                      {
+                        path:'entreprise/',
+                        element:<UpdateEnterprise/>
+                      },
+                      {
+                        path:'offre-stage/',
+                        element:<CreateInternshipOffer/>
+                      },
+                      {
+                        path:'offre-stage/update/:id',
+                        element:<UpdateInternshipOffer/>
+                      },
+                      {
+                        path:'offres-stage/',
+                        element:<RecruiterInternships/>
+                      }
+                    ]
                   }
                 ]
               }
-            ]
-          },
+            
+          
 
           ],
 
@@ -144,7 +161,7 @@ const router = createBrowserRouter([
           element:<Internships/>
         },
         {
-          path:'stage/titre-de-stage/',
+          path:'stage/:titre_stage/:id',
           element:<InternshipDetails/>
         },
         {
@@ -156,6 +173,12 @@ const router = createBrowserRouter([
         
       ],
     },
+    {
+      path:'/test',
+      element:<Test/>
+        
+      
+    }
   
    
   ])

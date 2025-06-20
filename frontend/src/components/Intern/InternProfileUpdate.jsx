@@ -37,7 +37,7 @@ export default function InternProfileUpdate() {
 
     // handle inputs values
     const [formData, setFormData] = useState({
-        statut: 'etudiant', // corresponds to radio selection
+        statut: 'Student', // corresponds to radio selection
         school_id: '',
         education_level_id: '',
         specialty_id: '',
@@ -48,7 +48,8 @@ export default function InternProfileUpdate() {
         city_id: '',
         start_date: new Date().toISOString().split("T")[0],
         duration: '',
-        intern_profile_id: '' // you’ll set this once profile is fetched
+        intern_profile_id: '' ,// you’ll set this once profile is fetched
+        profile_score:profileScore
 });
 
     // 
@@ -75,7 +76,9 @@ export default function InternProfileUpdate() {
                 city_id: res.data.data.intern_ship_preferences?.city_id ?? '',
                 start_date: res.data.data.intern_ship_preferences?.start_date ?? new Date().toISOString().split("T")[0],
                 duration: res.data.data.intern_ship_preferences?.duration ?? '',
-                cv_path:res.data.data.intern_profile?.cv_path ?? ''
+                cv_path:res.data.data.intern_profile?.cv_path ?? '',
+                profile_score:res.data.data.intern_profile?.profile_score ?? 3,
+
                 }));
         })
         .catch(err=>console.log(err))
@@ -116,7 +119,7 @@ useEffect(() => {
 
   const HandleSubmit=(e)=>{
     e.preventDefault();
-    setLoading(true)
+    setLoading(true);
      const form = new FormData();
     form.append("_method", "PATCH"); // tells Laravel to treat it as PATCH
     form.append("statut", formData.statut);
@@ -129,6 +132,8 @@ useEffect(() => {
     form.append("city_id", formData.city_id);
     form.append("start_date", formData.start_date);
     form.append("duration", formData.duration);
+    form.append("profile_score", profileScore);
+
 
   // Only append the file if it's a File instance
   if (formData.cv_path instanceof File) {
@@ -145,7 +150,11 @@ useEffect(() => {
         }).then(res=>{
             setLoading(false)
             setNotification(true)
-            console.log(res.data.data)
+       
+            
+
+
+
         }).catch(err=>console.log(err))
     }
 
@@ -189,7 +198,7 @@ useEffect(() => {
 
         <div className='bg-gray-200 rounded-lg w-full h-[10%]  flex justify-center items-center !px-5 gap-x-1'>
             <div className='text-2xl text-blue-500 font-semibold uppercase w-1/3 bg-blue h-[100%] flex justify-start items-center'>modefier de profil</div>
-            <div className='text-2xl text-slate-400 uppercase font-semibold  w-1/3 bg-blue h-[100%] flex justify-end items-center'>score de profil:  <span className={`text-2xl font-semibold !mr-1 ${profileScoreColor}`}> {profileScore}</span > <span className='text-2xl font-semibold '>/10</span></div>
+            <div className='text-2xl text-slate-400 uppercase font-semibold  w-1/3 bg-blue h-[100%] flex justify-end items-center'>score de profil:  <span className={`text-2xl font-semibold !mr-1 ${profileScoreColor}`}> {formData.profile_score}</span > <span className='text-2xl font-semibold '>/10</span></div>
             <div className='w-1/3 h-[100%] flex justify-end items-center'>
             <div className='flex justify-center items-center gap-x-2 border-slate-400 border-1 outline-none !p-2 rounded-lg bg-amber'> 
 

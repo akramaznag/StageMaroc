@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import {
   HomeIcon,
   IdentificationIcon,
@@ -11,14 +11,30 @@ import {
   ArrowUpTrayIcon,
   EyeIcon,
   DocumentIcon,
-  BuildingOfficeIcon
+  BuildingOfficeIcon,
+  XMarkIcon,
+  CheckCircleIcon
 } from '@heroicons/react/24/outline';
-import { Link } from 'react-router-dom';
+import { Form, Link } from 'react-router-dom';
 import axios from 'axios';
+import Spinner from '../../Spinner';
 export default function DefaultDashboardPage() {
   const [internship_preferences,setInternship_preferences]=useState()
   const [specialty,setSpecialty]=useState()
   const [city,setCity]=useState();
+  const [internProfile,setInternProfile]=useState();
+  const [applicationsCount,setApplicationsCount]=useState();
+  const [selectedCv,setSelectedcv]=useState(null);
+  const [Loading,setLoading]=useState(false)
+  const [notification,setNotification]=useState(false)
+
+  const inputFileRef=useRef();
+  const formRef=useRef();
+
+  const [formData,setFormData]=useState({
+    intern_id:null,
+    cv:''
+  });
 
   const token=sessionStorage.getItem('token')
   useEffect(()=>{
@@ -30,21 +46,105 @@ export default function DefaultDashboardPage() {
     setInternship_preferences(res.data.internship_preference);
     setSpecialty(res.data.specialty);
     setCity(res.data.internship_preference_city);
+    setApplicationsCount(res.data.applications_count);
+    setInternProfile(res.data.intern_profile);
+    setFormData({ ...formData,intern_id:res.data.intern_profile.id})
   }).catch(err=>console.log(err))
 
   }
   
   ,[])
   console.log(internship_preferences)
+
+ useEffect(() => {
+  if (selectedCv) {
+    setFormData(prev => ({ ...prev, cv: selectedCv }));
+  }
+}, [selectedCv]);
+
+useEffect(() => {
+  if (formData.cv) {
+    handleSubmit({ preventDefault: () => {} }); 
+  }
+}, [formData.cv]);
+  const handleSubmit=(e)=>{
+     e.preventDefault();
+     setLoading(true)
+     console.log('form submitted here is the data',formData)
+    const form=new FormData();
+    form.append('id',formData.intern_id);
+    form.append('cv_path',formData.cv);
+  
+    axios.post('http://127.0.0.1:8000/api/intern_profile/update_cv',form,{
+        headers:{
+          Authorization:`bearer ${token}`,
+          "Content-Type": "multipart/form-data"       
+        }
+      } )
+    .then(res=>{
+      console.log(res.data)
+      setInternProfile({...internProfile,cv_path:res.data.cv})
+      setLoading(false)
+      setNotification(true)
+    })
+    .catch(err=>console.log(err))
+
+
+}
+
+  const handleFileChange=(e)=>{
+    const selected_cv =e.target.files[0]
+    if(selected_cv){
+      setSelectedcv(e.target.files[0])
+     console.log('file selected');
+     
+   
+    }
+  }
+  //notification
+   useEffect(() => {
+    if (notification) {
+      const timer = setTimeout(() => {
+        setNotification(false);
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [notification]);
+    const CloseNotification=()=>{
+       setNotification(false)
+    }
+  
   
   return (
     <>
      {/* Main Dashboard Cards */}
           <div className='flex w-full gap-x-3.5 '>
+              {/* notification */}
+        <div className={`fixed z-40 right-0 top-0 w-[30%] h-auto flex justify-end transition-all duration-500 ease-in-out
+          ${notification ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-5 pointer-events-none'}`}>
+            <div className={ 'bg-white  w-[80%] h-[75px] border-1 border-gray-200 rounded-lg relative right-4 top-4 shadow-md flex items-center justify-between !p-3 gap-x-2 transition-opacity duration-300 '}>
+                
+                <div className='flex items-center gap-x-2 '>
+
+                <CheckCircleIcon className='w-7 h-7 text-green-400 relative bottom-2'/>
+                <div className='flex flex-col gapy-y-2'>
+                    <div className='first-letter:capitalize font-bold text-sm'>le cv est mis à jour</div>
+                    <div className='text-[12px] first-letter:capitalize text-slate-500'>le cv a été mis à jour avec succès</div>
+                </div>
+                </div>
+                
+                <div className='flex items-center gap-x-2 '>
+
+                <XMarkIcon onClick={()=>CloseNotification()} className='w-6 h-6 text-slate-500 relative bottom-2 font-bold'/>
+                
+                </div>
+
+            </div>
+        </div>
             {/* Profile Score Card */}
             <div className='bg-white h-[200px] border-b-4 border-blue-500 shadow-blue-300 shadow-[0px_45px_45px_-50px] w-1/3 flex flex-col justify-center items-center rounded-lg gap-y-2.5'>
               <div>
-                <span className='text-5xl'>7</span>
+                <span className='text-5xl'>{internProfile?.profile_score}</span>
                 <span className='text-md'>/10</span>
               </div>
               <p className='capitalize text-md !mb-8'>mon score profil</p>
@@ -57,7 +157,7 @@ export default function DefaultDashboardPage() {
             {/* Applications Card */}
             <div className='bg-white h-[200px] border-b-4 border-orange-500 shadow-orange-300 shadow-[0px_45px_45px_-50px] w-1/3 flex flex-col justify-center items-center rounded-lg gap-y-2.5'>
               <div>
-                <span className='text-5xl'>0</span>
+                <span className='text-5xl'>{applicationsCount}</span>
               </div>
               <p className='capitalize text-md !mb-8'>candidature envoyes</p>
               <div className='bg-orange-500 !p-1.5 !px-2 rounded-2xl flex items-center justify-center gap-x-1.5'>
@@ -193,14 +293,40 @@ export default function DefaultDashboardPage() {
 
                     </div>
                     <div className='flex flex-col w-full gap-y-1'>
-                     <div className='bg-white w-full !py-2.5 text-black !px-10 rounded-md flex justify-center items-center gap-x-2 border-gray-200 border-2 cursor-pointer'>
-                      <EyeIcon className='w-6 h-6 font-bold'/> 
-                      <p className='text-sm font-semibold capitalize'>voir mon <span className='uppercase'> cv</span></p>
-                      </div>
-                      <div className='bg-blue-500 w-full !py-2.5 text-white !px-10 rounded-md flex justify-center items-center gap-x-2 border-gray-200 border-2 cursor-pointer'>
-                      <ArrowUpTrayIcon className='w-6 h-6 font-bold'/> 
-                      <p className='text-sm font-semibold capitalize'>nouveau <span className='uppercase'> cv</span></p>
-                      </div>
+                      {
+                          !internProfile?.cv_path?
+                      <div className='bg-white w-full !py-2.5 text-black !px-10 rounded-md flex justify-center items-center gap-x-2 border-gray-200 border-2 cursor-pointer'>
+                        <XMarkIcon className='w-6 h-6 font-bold'/> 
+                        <p className='text-sm font-semibold capitalize'>aucun CV trouvé</p>
+                        </div>
+                        :
+                         <Link to={`http://127.0.0.1:8000/storage/${internProfile?.cv_path}`} className='bg-white w-full !py-2.5 text-black !px-10 rounded-md flex justify-center items-center gap-x-2 border-gray-200 border-2 cursor-pointer'>
+                        <EyeIcon className='w-6 h-6 font-bold'/> 
+                        <p className='text-sm font-semibold capitalize'>voir mon <span className='uppercase'> cv</span></p>
+                        </Link>
+
+                      }
+                      <form ref={formRef} onSubmit={(e)=>handleSubmit(e)} onClick={()=>inputFileRef.current.click()} className='bg-blue-500 w-full !py-2.5 text-white !px-10 rounded-md flex justify-center items-center gap-x-2 border-gray-200 border-2 cursor-pointer'>
+                        
+                         {
+                          Loading?(
+                            <>
+                            <p className='text-sm font-semibold capitalize'>téléchargement...</p>
+                             <Spinner/>
+                            </>
+                          )
+                          :
+                          <>
+                          <ArrowUpTrayIcon className='w-6 h-6 font-bold'/> 
+                          <p className='text-sm font-semibold capitalize'>nouveau <span className='uppercase'> cv</span></p>
+
+
+                          <input ref={inputFileRef} type="file" hidden  onChange={handleFileChange} />
+                          </>
+                         }
+                           
+                        
+                      </form>
                      </div>
                   </div>
             

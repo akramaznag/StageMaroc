@@ -1,14 +1,33 @@
 import React from 'react'
 import { IdentificationIcon,PaperAirplaneIcon ,DocumentDuplicateIcon,DocumentIcon} from '@heroicons/react/24/outline';
 import { Link } from 'react-router-dom';
-
+import axios from 'axios';
+import { useState,useEffect } from 'react';
+import DataLoadingSpinner from '../DataLoadingSpinner';
 export default function ApplicationDetails() {
+    const [DataLoading,setDataLoading]=useState(true);
+    const [application,setApplication]=useState();
+    const token = sessionStorage.getItem('token');
+     useEffect(()=>{
+         
+          axios.get('http://127.0.0.1:8000/api/internship_application/get_intern_application_details',{ headers:{ Authorization:`bearer ${token}`}}).then(res=>{
+            console.log(res.data)
+            setApplication(res.data.application)
+            setDataLoading(false)
+            
+           }).
+           catch(err=>{
+            console.log('error caught',err)
+            setDataLoading(false)
+     })
+        },[])
   return (
       <div className='flex flex-col h-auto gap-y-3  border-blue rounded-lg'>
             
              <div className='bg-gray-200 rounded-lg w-full h-[60px]  flex justify-center items-center !px-5 gap-x-1'>
                  <div className='text-2xl font-bold uppercase w-full bg-blue h-[100%] flex justify-start items-center gap-x-3'>
                   <span className='text-blue-500'>Afficher et gérer les détails</span>
+                  {DataLoading && <DataLoadingSpinner/>}
                 </div>
              </div>
              {/* application container */}
@@ -17,12 +36,11 @@ export default function ApplicationDetails() {
                     <div className='bg-white h-[200px] w-full !p-4 flex gap-5 shadow-lg rounded-lg '>
                             <div className='w-full flex flex-col '>
                                 <div className='w-full flex justify-between !mb-1'>
-                                  <div className='bg-blue-200 text-blue-800 text-[12px] capitalize font-bold w-[7%] flex justify-center items-center rounded-md border-none'>postulé</div>
-                                </div>
-                                <Link to={'/stage/titre-de-stage/'} className='text-lg font-bold capitalize hover:underline '> Financial Sales Representative</Link>
-                                <div className='text-md font-light capitalize'>sanlam</div>
-                                <div className='text-md font-light capitalize'>casablanca</div>
-                                <div className='capitalize text-md font-light'>envoye le 11-11-2025</div>
+<div className={`${application?.status==='accepted' ? 'bg-green-200 text-green-800 ':application?.status==='declined'?'bg-red-200 text-red-800 ':'bg-blue-200 text-blue-800 '}  text-[12px] capitalize font-bold w-fit flex !py-1 !px-1.5 justify-center items-center rounded-md border-none`}>candidature {application?.status==='accepted' ? 'accepté':application?.status==='declined'?'refusée':'en cours'} </div>                                </div>
+                                <Link to={'/stage/titre-de-stage/'} className='text-lg font-bold capitalize hover:underline '> {application?.internship_title}</Link>
+                                <div className='text-md font-light capitalize'>{application?.enterprise_name}</div>
+                                <div className='text-md font-light capitalize'>{application?.internship_city}</div>
+                                <div className='capitalize text-md font-light'>postulé le {application?.intern_applied_at}</div>
                             </div>
 
                     </div>
@@ -35,19 +53,19 @@ export default function ApplicationDetails() {
                             <div className='flex flex-col items-start justify-start  h-auto w-full border-1 border-gray-200 rounded-lg'>
                                 <div className='bg-red w-full !p-5 border-b-1 border-gray-200  flex flex-col gap-y-1 '>
                                     <div className='text-sm text-slate-500 capitalize'>le nom complet</div>
-                                    <div className='text-md font-bold capitalize'>ilam amir</div>
+                                    <div className='text-md font-bold capitalize'>{application?.intern_full_name}</div>
                                 </div>
                                 <div className='bg-red w-full !p-5 border-b-1 border-gray-200  flex flex-col gap-y-1 '>
                                     <div className='text-sm text-slate-500 capitalize'>Email</div>
-                                    <div className='text-md font-bold capitalize'>amir@gmail.com</div>
+                                    <div className='text-md font-bold capitalize'>{application?.intern_email}</div>
                                 </div>
                                 <div className='bg-red w-full !p-5 border-b-1 border-gray-200  flex flex-col gap-y-1 '>
                                     <div className='text-sm text-slate-500 capitalize'>Ville</div>
-                                    <div className='text-md font-bold capitalize'>Casablanca</div>
+                                    <div className='text-md font-bold capitalize'>{application?.intern_city}</div>
                                 </div>
                                   <div className='bg-red w-full !p-5 b   flex flex-col gap-y-1 '>
                                     <div className='text-sm text-slate-500 capitalize'>téléphone</div>
-                                    <div className='text-md font-bold capitalize'>0654339871</div>
+                                    <div className='text-md font-bold capitalize'>{application?.intern_phone}</div>
                                 </div>
                             </div>
                             <div className='w-full'>
@@ -55,7 +73,7 @@ export default function ApplicationDetails() {
                                 <div className='flex items-center gap-x-5'>
                                         <div className='w-[100%] !px-2 !py-3 rounded-lg border-1 border-gray-200 flex items-center gap-x-5 shadow-md '>
                                             <DocumentIcon className='w-6 h-6 text-blue-500' />
-                                            <a href="/download.png" download="cv.png" className="text-blue-500">cv.pdf</a>
+                                            <a  href={`http://127.0.0.1:8000/storage/${application?.intern_cv_path}`} download className="text-blue-500">voir le cv</a>
                                                                             
                                         </div>                                   
                                 </div>

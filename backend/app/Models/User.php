@@ -64,8 +64,15 @@ class User extends Authenticatable implements JWTSubject{
     public function internProfile(){
     return $this->hasOne(InternProfile::class);
     }
+    
     public function hasInternProfile(){
     return $this->internProfile()->exists();
+    }
+    public function enterprise(){
+    return $this->hasOne(Enterprise::class);
+    }
+    public function HasEnterprise(){
+        return $this->enterprise()->exists();
     }
 
 }

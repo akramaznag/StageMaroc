@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import Spinner from '../../Spinner'
 export default function RecruiterLogin() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState([]);
+  const [Loading,setLoading]=useState(false)
+  const navigate=useNavigate()
 
   const OnSubmit = (e) => {
     e.preventDefault();
+    setLoading(true)
     const validationErrors = [];
 
     if (!email.trim()) {
@@ -24,12 +28,37 @@ export default function RecruiterLogin() {
       console.log('Email:', email);
       console.log('Password:', password);
       // You can proceed with API call or authentication here
+       axios.post('http://127.0.0.1:8000/api/login',{email:email,password:password}).then(res=>{
+        
+          sessionStorage.setItem('token',res.data.authorization.token)
+          sessionStorage.setItem('user',JSON.stringify(res.data.user))
+          setLoading(false)
+          console.log(res.data)
+        
+          if (res.data.user.role==="recruiter"){
+            navigate("/recruteur/dashboard");
+          }
+            if (res.data.user.role==="intern"){
+            navigate("/stagaire/dashboard")
+          }
+          
+      }).catch(err=>{
+        const errors=[]
+        setLoading(false)
+
+        if (err.response) {
+          errors.push(err.response.data.message || 'Login failed')
+          setErrors(errors);
+          setLoading(false)
+        } 
+      }
+      )
     }
   };
 
   return (
     <div className='flex justify-center'>
-      <div className='h-[500px] !mt-[250px] w-[470px]'>
+      <div className={`${errors.length>0 ? 'h-[600px]' : 'h-[500px]'} !mt-[250px] w-[470px]`}>
           <div className='text-gray-500 text-2xl text-center uppercase !mb-2'>espace recruteur</div>
           <div className='text-blue-400 text-sm text-center first-letter:capitalize !mb-5'>(Organismes seulement)</div>
 
@@ -89,9 +118,9 @@ export default function RecruiterLogin() {
               </Link>
               <button
                 type='submit'
-                className='rounded-sm !py-2 !px-4 cursor-pointer transition-all duration-300 bg-black text-white text-sm hover:bg-gray-700'
-              >
-                se connecter
+                className={`rounded-sm !py-2 !px-4 cursor-pointer transition-all duration-300 bg-black text-white text-sm hover:bg-gray-700 ${Loading && 'flex gap-x-2'}`}>
+                  {Loading && <Spinner/>}
+                  <span>  se connecter</span>
               </button>
             </div>
           </form>

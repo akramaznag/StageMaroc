@@ -21,6 +21,8 @@ class InternProfile extends Model
         'presentation',
         'school_id',
         'cv_path',
+        'profile_score', // this line is important!
+
     ];
 
     // Define relationships
