@@ -2,7 +2,16 @@ import React from 'react'
 import Body from './Body'
 import Header from './Header'
 import Footer from './Footer'
+import {  useNavigate } from 'react-router-dom'
+import { useEffect } from 'react'
 export default function Container() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    navigate('/stages/', { replace: true });
+  }, [navigate]);
+  
+  
   return (
     
 <div className='min-h-screen  grid grid-rows-[auto_1fr_auto] grid-cols-10 overflow-y-scroll' >

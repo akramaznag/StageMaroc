@@ -41,5 +41,9 @@ class InternProfile extends Model
     {
         return $this->belongsTo(Specialty::class);
     }
+      public function school()
+    {
+        return $this->belongsTo(School::class,'school_id');
+    }
  
 }

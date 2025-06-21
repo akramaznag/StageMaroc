@@ -18,7 +18,35 @@ import {
 } from '@heroicons/react/24/outline';
 import { Link } from 'react-router-dom';
 import { MegaphoneIcon } from '@heroicons/react/24/solid';
+import { useState,useEffect } from 'react';
+import axios from 'axios';
+
+
+
 export default function RecruiterDefaultDashboardPage() {
+  const [applicationDetails,setApplicationDetails]=useState([])
+  const [internships,setInternships]=useState([]);
+  const token=sessionStorage.getItem("token");
+  
+  useEffect(() => {
+  
+        axios.get('http://127.0.0.1:8000/api/internship/list', {
+          headers: { Authorization: `bearer ${token}` }
+        }).then(res => {
+          setInternships(res.data.internships);
+        }).catch(err => console.log(err));
+    }, []);
+
+  useEffect(() => {
+    
+      axios.get('http://127.0.0.1:8000/api/internship_application/get_recruiter_applications', {
+        headers: { Authorization: `bearer ${token}` }
+      }).then(res => {
+        setApplicationDetails(res.data.applications);
+      }).catch(err => console.log('error caught', err));
+
+  }, []);
+
   return (
    <>
      {/* Main Dashboard Cards */}
@@ -27,7 +55,7 @@ export default function RecruiterDefaultDashboardPage() {
             {/* Internship Count Card */}
             <div className='bg-white h-[200px] border-b-4 border-blue-500 shadow-blue-300 shadow-[0px_45px_45px_-50px] w-1/3 flex flex-col !pt-8 justify-between  items-center gap-y-1 rounded-lg'>
               <div className='flex flex-col items-center justify-center gap-y-0.5'> 
-                <span className='text-5xl'>0</span>
+                <span className='text-5xl'>{internships.length}</span>
                 <div className='capitalize '>Offres de Stage</div>
                 <p className='text-[12px] text-slate-400 w-[70%] text-center'>Publiez des offres de Stage pour recruter des stagiaires intéressés</p>
 
@@ -41,7 +69,7 @@ export default function RecruiterDefaultDashboardPage() {
             {/* Applications Count Card */}
             <div className='bg-white h-[200px] border-b-4 border-orange-500 shadow-orange-300 shadow-[0px_45px_45px_-50px] w-1/3 flex flex-col !pt-8 !pb-1 justify-between  items-center gap-y-1 rounded-lg'>
               <div className='flex flex-col items-center justify-center gap-y-0.5'> 
-                <span className='text-5xl'>0</span>
+                <span className='text-5xl'>{applicationDetails.length}</span>
                 <div className='capitalize '>Candidatures Reçues</div>
                 <p className='text-[12px] text-slate-400 w-[70%] text-center'>Toutes vos candidatures sont classées par Offre de Stage publiée</p>
 

@@ -47,6 +47,7 @@ class InternshipApplicationController extends Controller
                 'phone'=>$intern->phone,
                 'email' => $intern->email,
                 'cv' => $intern->internProfile->cv_path,
+                'profile_score'=>$intern->internProfile->profile_score
             ]
         ],200);
 
