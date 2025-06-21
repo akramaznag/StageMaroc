@@ -26,7 +26,8 @@ export default function DefaultDashboardPage() {
   const [applicationsCount,setApplicationsCount]=useState();
   const [selectedCv,setSelectedcv]=useState(null);
   const [Loading,setLoading]=useState(false)
-  const [notification,setNotification]=useState(false)
+  const [notification,setNotification]=useState(false);
+  
 
   const inputFileRef=useRef();
   const formRef=useRef();
@@ -297,7 +298,7 @@ useEffect(() => {
                           !internProfile?.cv_path?
                       <div className='bg-white w-full !py-2.5 text-black !px-10 rounded-md flex justify-center items-center gap-x-2 border-gray-200 border-2 cursor-pointer'>
                         <XMarkIcon className='w-6 h-6 font-bold'/> 
-                        <p className='text-sm font-semibold capitalize'>aucun CV trouvé</p>
+                        <p className='text-sm font-semibold capitalize'>aucun CV</p>
                         </div>
                         :
                          <Link to={`http://127.0.0.1:8000/storage/${internProfile?.cv_path}`} className='bg-white w-full !py-2.5 text-black !px-10 rounded-md flex justify-center items-center gap-x-2 border-gray-200 border-2 cursor-pointer'>

@@ -14,6 +14,7 @@ export default function Header() {
    const [applicationDetails,setApplicationDetails]=useState([])
    const [internships,setInternships]=useState([]);
    const [enterprise_name,setEnterprisename]=useState()
+
    const navigate=useNavigate()
    let role='';
    if(user){
@@ -96,13 +97,13 @@ useEffect(() => {
       <li className='w-full flex justify-center gap-x-4'>
      
    
-        <Link  to={'/recruteur/dashboard/candidatures/'} className='cursor-pointer bg-gray-50  rounded-lg !p-2 lowercase flex justify-center items-center gap-x-2'>
-         <div className='flex justify-center items-center !p-1 bg-gray-200 text-slate-700 rounded-full text-sm'>{applicationDetails.length}</div>
-         <div className='text-sm capitalize text-slate-500'>candidatures</div>
-        </Link>
         <Link to={'/recruteur/dashboard/offres-stage/'} className='cursor-pointer bg-gray-50  rounded-lg !p-2 lowercase flex justify-center items-center gap-x-2'>
          <div className='flex justify-center items-center !p-1 bg-gray-200 text-slate-700 rounded-full text-sm'>{internships.length}</div>
          <div className='text-sm capitalize text-slate-500'>offres stages</div>
+        </Link>
+        <Link  to={'/recruteur/dashboard/candidatures/'} className='cursor-pointer bg-gray-50  rounded-lg !p-2 lowercase flex justify-center items-center gap-x-2'>
+         <div className='flex justify-center items-center !p-1 bg-gray-200 text-slate-700 rounded-full text-sm'>{applicationDetails.length}</div>
+         <div className='text-sm capitalize text-slate-500'>candidatures</div>
         </Link>
       
         <div onClick={()=>{
@@ -133,7 +134,7 @@ useEffect(() => {
         <ul className='flex flex-col gap-y-1'>
            <li className='text-[12px] !p-2 text-gray-400'>espace recruteur</li>
            <li className='hover:bg-gray-200 transition-all duration-300 !p-2'>
-            <Link to={'/stagaire/dashboard/'} className='text-[13px] first-letter:capitalize' onClick={()=>setAccountPopup(false)}>tableau de bord</Link>
+            <Link to={'/recruteur/dashboard/'} className='text-[13px] first-letter:capitalize' onClick={()=>setAccountPopup(false)}>tableau de bord</Link>
            </li>
            <li className='hover:bg-gray-200 transition-all duration-300 !p-2'>
                <Link to={'/utilisateur/profil/'} className='text-[13px] first-letter:capitalize' onClick={()=>setAccountPopup(false)}>parametres</Link>

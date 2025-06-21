@@ -6,6 +6,7 @@ use App\Models\City;
 use App\Models\EducationLevel;
 use App\Models\Enterprise;
 use App\Models\Internship;
+use App\Models\School;
 use App\Models\Specialty;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -238,5 +239,88 @@ class InternshipController extends Controller
         }),
     ]);
 }
+
+
+    public function filter(Request $request)
+    {
+        // Start building the query
+        $query = Internship::query();
+
+        // 🔹 Paid / Unpaid filter
+        if (!is_null($request->is_paid)) {
+            if ($request->is_paid == 1) {
+                $query->where('remuneration', '!=', '0 dh'); // Paid
+            } else {
+                $query->where('remuneration', '=', '0 dh'); // Unpaid
+            }
+        }
+
+        // 🔹 Type filter (e.g., onsite, remote, hybrid)
+        if ($request->filled('type') && is_array($request->type)) {
+            $query->whereIn('type', $request->type);
+        }
+
+        // 🔹 Availability filter (e.g., fulltime, parttime)
+        if ($request->filled('availability') && is_array($request->availability)) {
+            $query->whereIn('availability', $request->availability);
+        }
+
+        // 🔹 Specialty
+        if ($request->filled('specialty_id')) {
+            $query->where('specialty_id', $request->specialty_id);
+        }
+
+        // 🔹 City
+        if ($request->filled('city_id')) {
+            $query->where('city_id', $request->city_id);
+        }
+
+        // 🔹 Duration
+        if ($request->filled('duration')) {
+            $query->where('duration', $request->duration);
+        }
+
+        // 🔹 Contract (e.g., PFE, d'été)
+        if ($request->filled('contract')) {
+            $query->where('contract', $request->contract);
+        }
+
+        // 🔹 Execute query with optional relationships
+        $internships = $query
+            ->with(['city', 'specialty']) // eager-load related models if needed
+            ->orderByDesc('created_at')
+            ->get();
+
+        // 🔹 Return filtered data
+        return response()->json([
+            'status' => 'success',
+            'internships' =>  $internships->map(function ($internship) {
+            return [
+                'id' => $internship->id,
+                'title' => $internship->title,
+                'type' => $internship->type,
+                'contract' => $internship->contract,
+                'start_date' => $internship->start_date,
+                'duration' => $internship->duration,
+                'remuneration' => $internship->remuneration,
+                'availability' => $internship->availability,
+                'profile_count' => $internship->profile_count,
+                'description' => $internship->description,
+                'specialty_id' => $internship->specialty_id,
+                'city_id' => $internship->city_id,
+                'enterprise_id' => $internship->enterprise_id,
+                'created_at' => $internship->created_at,
+                'status' => $internship->status,
+
+                'specialty' => $internship->specialty->specialite,
+                'city' => $internship->city->name,
+                'enterprise' => $internship->enterprise->enterprise_name,
+                'enterprise_photo' => $internship->enterprise->photo,
+
+            ];
+        }),
+        ]);
+    }
+
 
 }

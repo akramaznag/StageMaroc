@@ -13,7 +13,8 @@ import {
   DocumentIcon,
   BuildingOfficeIcon,
   XMarkIcon,
-  CheckCircleIcon
+  CheckCircleIcon,
+  ExclamationCircleIcon
 
 } from '@heroicons/react/24/outline';
 import { Link } from 'react-router-dom';
@@ -32,7 +33,16 @@ export default function InternProfileUpdate() {
     const [profileScoreColor,setProfileScoreColor]=useState('text-red-500')
     const fileInputRef =useRef();
     const [Loading,setLoading]=useState(false);
-    const [notification,setNotification]=useState(false)
+    const [notification,setNotification]=useState(false);
+    const [infoNotification,setInfoNotification]=useState(false);
+    const message=JSON.parse(sessionStorage.getItem('message'))
+    useEffect(()=>{
+        if(message){
+          setInfoNotification(true)
+        }
+      },[])
+    
+
     
 
     // handle inputs values
@@ -170,28 +180,67 @@ useEffect(() => {
     const CloseNotification=()=>{
        setNotification(false)
     }
+    //info notification
+     useEffect(() => {
+    if (infoNotification) {
+      const timer = setTimeout(() => {
+        setInfoNotification(false);
+        sessionStorage.removeItem('message')
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [infoNotification]);
+    const CloseInfoNotification=()=>{
+       setInfoNotification(false);
+      sessionStorage.removeItem('message');  
+
+    }
 
   return (
     <div className='flex flex-col h-[600px] gap-y-3  border-blue rounded-lg'>
           {/* notification */}
         <div className={`fixed z-40 right-0 top-0 w-[30%] h-auto flex justify-end transition-all duration-500 ease-in-out
-          ${notification ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-5 pointer-events-none'}`}>
-            <div className={ 'bg-white  w-[80%] h-[75px] border-1 border-gray-200 rounded-lg relative right-4 top-4 shadow-md flex items-center justify-between !p-3 gap-x-2 transition-opacity duration-300 '}>
-                
-                <div className='flex items-center gap-x-2 '>
+          ${    (notification || infoNotification) ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-5 pointer-events-none'}`}>
+            <div className={ `bg-white  w-[80%] h-[75px] border-1  border-l-2 ${notification? 'border-l-green-400':infoNotification && 'border-l-orange-400'} border-gray-200 rounded-lg relative right-4 top-4 shadow-md flex items-center justify-between !p-3 gap-x-2 transition-opacity duration-300 `}>
+               {
+                notification?
 
-                <CheckCircleIcon className='w-7 h-7 text-green-400 relative bottom-2'/>
-                <div className='flex flex-col gapy-y-2'>
-                    <div className='first-letter:capitalize font-bold text-sm'>le profil est mis à jour</div>
-                    <div className='text-[12px] first-letter:capitalize text-slate-500'>le profil a été mis à jour avec succès</div>
-                </div>
-                </div>
-                
-                <div className='flex items-center gap-x-2 '>
+                    <>
+                    <div className='flex items-center gap-x-2 '>
+                        <CheckCircleIcon className='w-7 h-7 text-green-400 relative bottom-2'/>
+                          <div className='flex flex-col gapy-y-2'>
+                              <div className='first-letter:capitalize font-bold text-sm'>le profil est mis à jour</div>
+                              <div className='text-[12px] first-letter:capitalize text-slate-500'>le profil a été mis à jour avec succès</div>
+                          </div>
+                    </div>
+                    
+                    <div className='flex items-center gap-x-2 '>
 
-                <XMarkIcon onClick={()=>CloseNotification()} className='w-6 h-6 text-slate-500 relative bottom-2 font-bold'/>
-                
-                </div>
+                    <XMarkIcon onClick={()=>CloseNotification()} className='w-6 h-6 text-slate-500 relative bottom-2 font-bold'/>
+                    
+                    </div>
+                    </>
+                  :
+                  infoNotification &&
+                    (
+                      <>
+                        <div className='flex items-center gap-x-2 '>
+                            <ExclamationCircleIcon className='w-7 h-7 text-orange-400 relative bottom-2'/>
+                              <div className='flex flex-col gapy-y-2'>
+                                  <div className='first-letter:capitalize font-bold text-sm'>{message.title}</div>
+                                  <div className='text-[12px] first-letter:capitalize text-slate-500'>{message.message}</div>
+                              </div>
+                        </div>
+                        
+                        <div className='flex items-center gap-x-2 '>
+
+                        <XMarkIcon onClick={()=>CloseInfoNotification()} className='w-6 h-6 text-slate-500 relative bottom-2 font-bold'/>
+                        
+                        </div>
+                    </>
+
+                  )
+               }
 
             </div>
         </div>

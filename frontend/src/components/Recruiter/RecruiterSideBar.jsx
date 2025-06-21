@@ -1,10 +1,20 @@
 import { Link, useLocation } from 'react-router-dom';
 import { HomeIcon, IdentificationIcon, PaperAirplaneIcon, CalendarIcon, BuildingOfficeIcon,MegaphoneIcon } from '@heroicons/react/24/outline';
-import { useEffect } from 'react';
+import { useEffect ,useState} from 'react';
+import axios from 'axios';
+
 export default function RecruiterSideBar() {
   
-
-  console.log('test yes')
+  const [enterprise_name,setEnterprisename]=useState();
+  const token=sessionStorage.getItem("token");
+  useEffect(() => {
+    axios.get("http://127.0.0.1:8000/api/enterprise/", {
+      headers: { Authorization: `bearer ${token}` }
+    }).then(res => {
+      setEnterprisename(res.data.enterprise.enterprise_name);
+    }).catch(err => console.log(err));
+  
+  }, []);
   const location = useLocation();
   const isActive = (path) => location.pathname === path;
 
@@ -25,9 +35,9 @@ export default function RecruiterSideBar() {
     <div className='bg-green col-start-1 col-end-2 fixed h-1/3 w-[20%] flex flex-col justify-center items-center gap-y-2'>
       {/* ENSA logo box */}
       <div className='bg-gray-200 rounded-lg grid grid-rows-2 grid-cols-3 w-[70%] h-[25%] !p-1'>
-        <div className='col-span-1 bg-gray-100 flex flex-col justify-center items-center w-[80%] !py-1 row-start-1 row-end-3'>EN</div>
-        <div className='col-start-2 col-end-3 font-semibold w-full'>Dynamic...</div>
-        <div className='col-start-2 col-end-4 text-[12px] capitalize'>enterprise</div>
+        <div className='col-span-1 bg-gray-100 flex flex-col justify-center items-center w-[80%] !py-1 row-start-1 row-end-3'>{enterprise_name?.split(' ').map(word => word[0].toUpperCase()).join('')}</div>
+        <div className='col-span-2 font-semibold w-full'>{enterprise_name?.length > 12 ? enterprise_name.slice(0, 12) + '...' : enterprise_name}</div>
+        <div className='col-span-2 text-[12px] capitalize'>enterprise</div>
       </div>
 
       {/* Dashboard */}

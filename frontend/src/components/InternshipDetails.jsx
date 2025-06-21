@@ -24,6 +24,7 @@ export default function InternshipDetails() {
     const [cities,setCities]=useState([]);
     const [Loading,setLoading]=useState(false);
     const [hasApplied,setHasApplied]=useState(false)
+    const [profileScore,setProfilescore]=useState()
     const [formData,setFormData]=useState({
         fullname:user?.full_name,
         email:user?.email,
@@ -47,6 +48,8 @@ export default function InternshipDetails() {
         ...prev,
         cv: intern.cv,
       }));
+      setProfilescore(intern.profile_score)
+      console.log(intern)
     }
   })
   .catch(err => {
@@ -135,7 +138,14 @@ export default function InternshipDetails() {
     const OpenPopUp=()=>{
         if(!user){
             navigate('/stagaire/connexion')
-
+        }
+        if(profileScore !=10){
+            navigate('/stagaire/dashboard/profile');
+            const message={
+                title:'profil requis',
+                message:'complétez votre profil pour postuler' 
+            }
+            sessionStorage.setItem('message',JSON.stringify(message))
         }
         setIsOpen(true)
         setTimeout(() => {

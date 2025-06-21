@@ -87,7 +87,7 @@ export default function ReceivedApplication() {
                 
              </div>
              {/* application */}
-             <div className={`bg-gray-200  w-full flex flex-col gap-y-3 !p-5 rounded-lg border-1 border-gray-300  h-[800px] ${ applicationDetails.length===3 && 'overflow-y-scroll'}`}>
+             <div className={`bg-gray-200  w-full flex flex-col gap-y-3 !p-5 rounded-lg border-1 border-gray-300  h-[800px] ${ applicationDetails.length>=3 && 'overflow-y-scroll'}`}>
              {/* //applications */}
              {
               applicationDetails.map(e=>{
