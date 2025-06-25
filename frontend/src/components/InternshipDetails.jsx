@@ -455,7 +455,7 @@ export default function InternshipDetails() {
                             <div className='text-sm'>03/03/2025</div>
                         </div>
                         <div>
-                            <div className='bg-rose-50 border-1 border-rose-300 text-rose-500 rounded-lg w-full h-[70px] flex justify-center items-center'>expiree</div>
+                            <div className={`${internship?.status==='expired'?' bg-rose-50 border-1 border-rose-300 text-rose-500':' bg-green-50 border-1 border-green-300 text-green-500'} capitalize rounded-lg w-full h-[70px] flex justify-center items-center`}>{internship?.status==='expired'?'Expiré':'active'}</div>
                         </div>
                     </div>
                     <div className='w-full'>
