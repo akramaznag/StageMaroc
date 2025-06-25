@@ -141,6 +141,8 @@ useEffect(() => {
                                     </div>
                                   <div className='flex gap-x-3 items-center bg-green'>
                                     <input id='remote'  type="checkbox"  name="type" value="remote" checked={formData.type.includes("remote")}  onChange={handleChange} className='h-[15px] w-[15px] rounded-xl border-1 border-gray-200' />
+                                     <label htmlFor='remote' className='capitalize text-sm font-semibold'>a distance </label>
+
                                    </div>
                                    <div className='flex gap-x-3 items-center bg-green'>
                                     <input id='hybrid' type="checkbox"  name="type" value="hybrid" checked={formData.type.includes("hybrid")}  onChange={handleChange} className='h-[15px] w-[15px] rounded-xl border-1 border-gray-200' />
@@ -244,7 +246,7 @@ useEffect(() => {
                                         <div key={e.id} className='bg-yellow w-full h-auto flex flex-col transition-all border-1 shadow-lg border-gray-200 rounded-lg  hover:border-blue-500 hover:outline-none'>
                                             <div className='h-[120px] border-1 border-gray-200 rounded-md w-full bg-white flex justify-between !px-3 items-center'>
                                                 {/* enterprise infos */}
-                                            <div className='bg-green w-[60%] h-[110px]  gap-x-3 !px-3 flex items-center'>
+                                            <div className=' w-[60%] h-[110px]  gap-x-3 !px-3 flex items-center'>
                                                 {/* enterprise logo */}
                                                 {
                                                     e.enterprise_photo ?(
@@ -253,9 +255,9 @@ useEffect(() => {
                                                     ):
                                                     <BuildingOfficeIcon className='h-[100px] w-[100px] rounded-md'/>
                                                 }
-                                                <div className='flex flex-col gap-y-2 h-[100px]  w-[370px]'>
-                                                    <div className=''>
-                                                        <Link className='text-blue-500 capitalize underline font-bold text-lg ' to={`/stage/${e.title}/${e.id}`}>{e.title}</Link> 
+                                                <div className='flex flex-col gap-y-2 h-[100px]  w-full'>
+                                                    <div className='w-full '>
+                                                        <Link className='text-blue-500 capitalize underline font-bold text-lg w-full ' to={`/stage/${e.title}/${e.id}`}>stage {e.title}</Link> 
                                                         </div>
                                                     <div className='flex justify-between w-[90%] '>
                                                         <Link className='text-slate-600 uppercase text-sm flex gap-x-1 '> <ArrowUpRightIcon className='w-5 h-5 '/>  <span>{e.enterprise}</span>   </Link>

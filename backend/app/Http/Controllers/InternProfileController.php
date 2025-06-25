@@ -74,8 +74,8 @@ class InternProfileController extends Controller
             'internship_preference_city'=>$internship_preference->city->name,
             'intern_profile'=>$intern_profile,
             'intern_school'=>[
-                'fullname'=>$intern_profile->school->full_name,
-                'shortname'=>$intern_profile->school->short_name,
+                'fullname'=>$intern_profile?->school->full_name ?? 'école',
+                'shortname'=>$intern_profile?->school?->short_name ?? 'EC',
             ],
             'applications_count'=>InternshipApplication::where('intern_id',Auth::user()->id)->get()->count() 
 

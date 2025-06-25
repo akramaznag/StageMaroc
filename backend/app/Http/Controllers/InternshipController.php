@@ -6,6 +6,7 @@ use App\Models\City;
 use App\Models\EducationLevel;
 use App\Models\Enterprise;
 use App\Models\Internship;
+use App\Models\InternshipApplication;
 use App\Models\School;
 use App\Models\Specialty;
 use Illuminate\Http\Request;
@@ -115,6 +116,7 @@ class InternshipController extends Controller
     }
     public function internship_details(int $id){
         $internship=Internship::find($id);
+        $internship_application_count=InternshipApplication::where('internship_id',$internship->id)->get()->count();
           return response()->json([
             'message' => 'internship retrieved successfully.',
             'status' => 'success',
@@ -135,6 +137,7 @@ class InternshipController extends Controller
                     'enterprise_id' => $internship->enterprise_id,
                     'created_at'=>$internship->created_at,
                     'status'=>$internship->status,
+                    'internship_application_count'=>$internship_application_count,
 
                     // Optional: include relationships if loaded
                     'specialty' => $internship->specialty ? $internship->specialty->specialite : null,

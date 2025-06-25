@@ -58,7 +58,7 @@ export default function Applications() {
                                           <div className={`${e.status==='accepted' ? 'bg-green-200 text-green-800 ':e.status==='declined'?'bg-red-200 text-red-800 ':'bg-blue-200 text-blue-800 '}  text-[12px] capitalize font-bold w-fit flex !py-1 !px-1.5 justify-center items-center rounded-md border-none`}>candidature {e.status==='accepted' ? 'accepté':e.status==='declined'?'refusée':'en cours'} </div>
                                           <Link to={`details/`} className='first-letter:capitalize font-bold text-md hover:underline'>afficher le details</Link>
                                         </div>
-                                        <Link  to={`/stage/${e.internship_title}/${e.internship_id}`} className='text-lg font-bold capitalize hover:underline'>{e.internship_title}</Link>
+                                        <Link  to={`/stage/${e.internship_title}/${e.internship_id}`} className='text-lg font-bold capitalize hover:underline'>stage {e.internship_title}</Link>
                                         <div className='text-md font-light capitalize'>{e.enterprise_name}</div>
                                         <div className='text-md font-light capitalize'>{e.internship_city}</div>
                                         <div className='capitalize text-md font-light'>postulé le {e.intern_applied_at}</div>
