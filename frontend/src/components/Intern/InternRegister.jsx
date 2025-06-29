@@ -86,10 +86,10 @@ export default function InternRegister() {
   return (
     <div className='flex justify-center'>
       <div className='h-[500px] !mt-[250px] w-[470px]'>
-        <div className='text-gray-500 text-xl text-center uppercase !mb-5'>espace candidat</div>
+        <div className='text-gray-500 text-2xl text-center uppercase !mb-5'>espace stagiaire</div>
 
         {/* Register container */}
-        <div className={`border-black bg-white rounded-3xl !p-8 ${errors.length > 0 ? 'max-h-[560px]' : 'h-[395px]'}`}>
+        <div className={`border-black shadow-md bg-white rounded-3xl !p-8 ${errors.length > 0 ? 'max-h-[560px]' : 'h-[395px]'}`}>
           <div className='flex justify-center gap-x-[150px] !mb-7'>
             <div className='uppercase border-b-2 border-blue-400'>
               <Link to="">inscription</Link>

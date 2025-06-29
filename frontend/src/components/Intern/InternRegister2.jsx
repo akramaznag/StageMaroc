@@ -114,7 +114,7 @@ export default function InternRegister2() {
                       })
                     }
                 </select>
-                <p className='text-sm capitalize text-red-500 font-medium'>the field is required</p>
+                {/* <p className='text-sm capitalize text-red-500 font-medium'>the field is required</p> */}
               </div>
               <div className='flex flex-col w-1/2 !p-2 gap-y-2 '>
                 <label className='text-sm capitalize'>spécialités <span className='text-red-500'>*</span> </label>
@@ -129,13 +129,13 @@ export default function InternRegister2() {
                     }
                     
                 </select>
-                <p className='text-sm capitalize text-red-500 font-medium'>the field is required</p>
+                {/* <p className='text-sm capitalize text-red-500 font-medium'>the field is required</p> */}
 
               </div>
 
             </div>
             <div className='w-full flex justify-start gap-x-3.5  !px-6.5'>
-            <div className='text-md capitalize font-semibold '>mon profil</div>
+            <div className='text-md capitalize font-semibold '>mon stage recherché</div>
             </div>
             
             <div className='border-1 border-gray-300 rounded-md h-auto w-full  gap-x-3.5 !p-5 grid grid-cols-4 grid-rows-2'>
@@ -151,7 +151,7 @@ export default function InternRegister2() {
                       })
                     }
                 </select>
-                <p className='text-sm capitalize text-red-500 font-medium'>the field is required</p>
+                {/* <p className='text-sm capitalize text-red-500 font-medium'>the field is required</p> */}
 
               </div>
               <div className='flex flex-col  !p-2 gap-y-2 col-span-2'>
@@ -167,14 +167,14 @@ export default function InternRegister2() {
                       })
                     }
                 </select>
-                <p className='text-sm capitalize text-red-500 font-medium'>the field is required</p>
+                {/* <p className='text-sm capitalize text-red-500 font-medium'>the field is required</p> */}
 
               </div>
               <div className='flex flex-col  !p-2 gap-y-2 col-span-2'>
                 <label className='text-sm capitalize'>Disponible à partir du <span className='text-red-500'>*</span> </label>
                 <input  onChange={(e)=>handlestart_date(e)} type='date' className='bg-white border-2 !py-2.5 !px-2 rounded-lg w-full text-sm   border-gray-300 focus:border-blue-700 focus:outline-none' />
              
-                <p className='text-sm capitalize text-red-500 font-medium'>the field is required</p>
+                {/* <p className='text-sm capitalize text-red-500 font-medium'>the field is required</p> */}
 
               </div>
                <div className='flex flex-col  !p-2 gap-y-2 col-span-2'>
@@ -190,7 +190,7 @@ export default function InternRegister2() {
                       })
                     }
                 </select>
-                <p className='text-sm capitalize text-red-500 font-medium'>the field is required</p>
+                {/* <p className='text-sm capitalize text-red-500 font-medium'>the field is required</p> */}
 
               </div>
 
