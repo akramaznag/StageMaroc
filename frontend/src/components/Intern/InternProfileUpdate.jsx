@@ -350,7 +350,7 @@ useEffect(() => {
                            <div className='bg-green h-auto w-full'>
                                  <div className="flex flex-col gap-y-2 ">
                                       <label className='text-sm capitalize'>présentation du stagiaire <span className='text-red-500'>*</span> </label>
-                                      <textarea required name='presentation' type='text' onChange={handleChange} value={formData.presentation} rows='5' className='!p-2 rounded-lg border-2 border-gray-300 focus:border-blue-500 focus:outline-none'/>
+                                      <textarea required name='presentation' type='text' onChange={handleChange} value={formData.presentation} rows='5' className='!p-2 rounded-lg border-2 border-gray-300 focus:border-blue-500 focus:outline-none text-[13px]'/>
                                     
                                  </div>
                                   

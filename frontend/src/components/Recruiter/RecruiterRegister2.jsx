@@ -73,7 +73,7 @@ export default function RecruiterRegister2() {
              <div className="bg-yellow w-[60%] h-auto ">
               <div className='flex flex-col w-[100%] h-auto gap-y-2'>
                <label className='text-sm capitalize font-semibold'>nom de l'entreprise</label>
-               <input required onChange={(e)=>setEnterprisename(e.target.value)} type="text" minLength='5' className='bg-white border-2 !py-2.5 !px-2 rounded-lg w-full text-sm   border-gray-300 focus:border-blue-700 focus:outline-none'/>
+               <input required onChange={(e)=>setEnterprisename(e.target.value)} type="text" minLength='3' className='bg-white border-2 !py-2.5 !px-2 rounded-lg w-full text-sm   border-gray-300 focus:border-blue-700 focus:outline-none'/>
               </div>
               
               </div>

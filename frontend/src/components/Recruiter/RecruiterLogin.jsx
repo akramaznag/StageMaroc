@@ -60,10 +60,10 @@ export default function RecruiterLogin() {
     <div className='flex justify-center'>
       <div className={`${errors.length>0 ? 'h-[600px]' : 'h-[500px]'} !mt-[250px] w-[470px]`}>
           <div className='text-gray-500 text-2xl text-center uppercase !mb-2'>espace recruteur</div>
-          <div className='text-blue-400 text-sm text-center first-letter:capitalize !mb-5'>(Organismes seulement)</div>
+          <div className='text-blue-400 text-sm text-center first-letter:capitalize !mb-5'>(entreprise seulement)</div>
 
         {/* register container */}
-        <div className={`border-black bg-white rounded-3xl !p-8 ${errors.length > 0 ? 'max-h-[430px]' : 'h-[350px]'}`}>
+        <div className={`border-black shadow-md bg-white rounded-3xl !p-8 ${errors.length > 0 ? 'max-h-[430px]' : 'h-[350px]'}`}>
         <div className='flex justify-center gap-x-[150px] !mb-7'>
             <div className='uppercase'>
               <Link to="/recruteur/inscription">inscription</Link>

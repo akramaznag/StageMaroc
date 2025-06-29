@@ -14,7 +14,7 @@ class EnterpriseController extends Controller
     public function create_enterprise(Request $request){
         $user=User::find(Auth::user()->id);
         $request->validate([
-            'enterprise_name'=>'string|required|min:5'
+            'enterprise_name'=>'string|required'
         ]);
         if ($user->HasEnterprise()){
             return response()->json(['status'=>'error','status_code'=>400,'message'=>'you have already created the enterprise']);

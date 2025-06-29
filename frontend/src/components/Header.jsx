@@ -80,7 +80,7 @@ useEffect(() => {
       //user menu
      <>
       {/* Navigation Menu */}
-      <ul className='flex list-none bg-yellow w-1/2 justify-center items-center  text-sm  capitalize'>
+      <ul className={`flex list-none ${(user && user.role==='recruiter'?'w-1/3':'w-1/2')}  justify-center items-center  text-sm  capitalize ` }>
       <li className=' cursor-pointer border-b-2 border-gray-50 hover:border-b-blue-400 transition-all duration-300  '>
        <Link to={'/stages'}>les offres de stages</Link>
         </li>
@@ -94,7 +94,7 @@ useEffect(() => {
           //recruiter menu
           <>
           
-      <li className='w-full flex justify-center gap-x-4'>
+      <li className='w-full flex justify-center gap-x-3'>
      
    
         <Link to={'/recruteur/dashboard/offres-stage/'} className='cursor-pointer bg-gray-50  rounded-lg !p-2 lowercase flex justify-center items-center gap-x-2'>
@@ -113,7 +113,6 @@ useEffect(() => {
           <div className='flex w-full items-center gap-x-3'>
            <div className='text-sm text-slate-900'>{enterprise_name}</div>
             <ChevronUpDownIcon className='w-4 h-4'/>
-
 
            </div>
         </div>
@@ -188,7 +187,7 @@ useEffect(() => {
         Accountpopup &&
        <li className={`${Accountpopup? ' transition-all duration-300  absolute right-27 top-19 bg-white text-black h-auto w-44 rounded-2xl !pt-2 !pb-1 border-2 border-gray-200 shadow-md':'hidden'    } `}>
         <ul className='flex flex-col gap-y-1'>
-           <li className='text-[12px] !p-2 text-gray-400'>espace stagaire</li>
+           <li className='text-[12px] !p-2 text-gray-400'>espace stagiaire</li>
             <Link to={'/stagaire/dashboard/'} className='hover:bg-gray-200 transition-all duration-300 !p-2' onClick={()=>setPopup(false)}>
                <li className='  text-[13px] first-letter:capitalize'>tableau de bord</li>
             </Link>
@@ -222,11 +221,11 @@ useEffect(() => {
         </li>
       <li  className={`cursor-pointer border-b-2 border-gray-50 transition-all duration-300 
            ${location.pathname.startsWith('/stagaire') ? 'border-b-blue-400' : 'hover:border-b-blue-400' }`}>
-           <Link to="/stagaire/inscription">espace stagaire</Link>
+           <Link to="/stagaire/inscription">espace stagiaire</Link>
       </li>
       <li className={`cursor-pointer border-b-2 border-gray-50 transition-all duration-300 
          ${location.pathname.startsWith('/recruteur') ? 'border-b-blue-400' : 'hover:border-b-blue-400'}`}>
-         <Link to="/recruteur/inscription">espace recruteur</Link>
+         <Link to="/recruteur/inscription">espace recruteur </Link>
       </li>
       </ul>
      
