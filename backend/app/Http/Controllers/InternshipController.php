@@ -324,6 +324,36 @@ class InternshipController extends Controller
         }),
         ]);
     }
+    public function search(string $value){
+        
+        $internships=Internship::where('title','LIKE','%'.$value.'%')->orderBy('created_at')->get();
+       return response()->json([
+            'internships' => $internships->map(function ($internship) {
+                return [
+                    'id' => $internship->id,
+                    'title' => $internship->title,
+                    'type' => $internship->type,
+                    'contract' => $internship->contract,
+                    'start_date' => $internship->start_date,
+                    'duration' => $internship->duration,
+                    'remuneration' => $internship->remuneration,
+                    'availability' => $internship->availability,
+                    'profile_count' => $internship->profile_count,
+                    'description' => $internship->description,
+                    'specialty_id' => $internship->specialty_id,
+                    'city_id' => $internship->city_id,
+                    'enterprise_id' => $internship->enterprise_id,
+                    'created_at' => $internship->created_at,
+                    'status' => $internship->status,
+                    'specialty' => $internship->specialty->specialite,
+                    'city' => $internship->city->name,
+                    'enterprise' => $internship->enterprise->enterprise_name,
+                    'enterprise_photo' => $internship->enterprise->photo,
+                ];
+            }),
+     ], 200);
 
+
+    }
 
 }
