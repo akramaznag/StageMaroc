@@ -105,6 +105,21 @@ useEffect(() => {
     .catch(err => console.error(err));
 }, [formData]);
 
+ const handleSearch=(e)=>{
+    
+     console.log(e.target.value);
+     const value=e.target.value;
+     if (value.length >0){
+
+         setDataLoading(true);
+     
+         axios.get(`http://127.0.0.1:8000/api/search/${value}`)
+         .then(res=>{
+             setInternships(res.data.internships);
+             setDataLoading(false)
+         }).catch(err=>console.log(err))
+     }
+ }
 
 
   return (
@@ -230,7 +245,7 @@ useEffect(() => {
                                 {DataLoading && <DataLoadingSpinner/>}
                             </div>
                             <div className='bg-green w-[25%] h-[100%] flex items-center justify-end'>
-                                <input placeholder='Rechercher' className='bg-white rounded-lg text-sm !px-3 !py-4 h-[100%] w-[80%] border-2 border-gray-300 focus:border-blue-500 transition-all duration-50 focus:outline-none  focus:border-3'/>
+                                <input onChange={handleSearch} placeholder='Rechercher' className='bg-white rounded-lg text-sm !px-3 !py-4 h-[100%] w-[80%] border-2 border-gray-300 focus:border-blue-500 transition-all duration-50 focus:outline-none  focus:border-3'/>
                                  <MagnifyingGlassIcon className=' text-slate-400 w-5 h-5 absolute right-[10%]'/> 
                             </div>
 

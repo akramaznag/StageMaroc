@@ -91,4 +91,5 @@ Route::middleware(['auth:api', 'role:intern,recruiter'])->prefix('internship_app
 Route::get('/public_internships',[InternshipController::class,'public_internships']);
 Route::get('/internship/details/{id}', [InternshipController::class, 'internship_details']);
 Route::post('/filter', [InternshipController::class, 'filter']);
+Route::get('/search/{value}', [InternshipController::class, 'search']);
 
