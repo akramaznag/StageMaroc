@@ -253,18 +253,18 @@ useEffect(() => {
                 <div className='bg-yellow w-full h-[220px] grid grid-cols-6 '>
                   <div className='bg-slate-100 w-[170px] rounded-lg h-[220px] col-start-1 col-end-2 flex flex-col justify-center !px-5 gap-y-3'>
                     <div className='bg-red  h-[80px]'>
-                      <img src={'/download.png'} className='h-[80px] w-full rounded-lg'/>
+                       <BuildingOfficeIcon  className='h-[80px] text-slate-300 w-full rounded-lg'/>
                     </div>
                     <div className='bg-red h-[80px]'>
-                      <p className='text-sm capitalize text-slate-900 text-center'>sanlam maroc</p>
+                      <p className='text-sm capitalize text-slate-900 text-center'>entreprise</p>
                     </div>
                   </div>
                   <div className='bg-slate-100 w-[170px] rounded-lg h-[220px] col-start-3 col-end-4 flex flex-col justify-center !px-5 gap-y-3'>
                       <div className='bg-red  h-[80px]'>
-                      <img src={'/alten.png'} className='h-[80px] w-full rounded-lg'/>
+                       <BuildingOfficeIcon  className='h-[80px] text-slate-300 w-full rounded-lg'/>
                     </div>
                     <div className='bg-red h-[80px]'>
-                      <p className='text-sm capitalize text-slate-900 text-center'>alten</p>
+                      <p className='text-sm capitalize text-slate-900 text-center'>entreprise</p>
                     </div>
                   </div>
                   <div className='bg-slate-100 w-[170px] rounded-lg h-[220px] col-start-5 col-end-6 flex flex-col justify-center !px-5 gap-y-3'>
@@ -272,7 +272,7 @@ useEffect(() => {
                       <BuildingOfficeIcon  className='h-[80px] text-slate-300 w-full rounded-lg'/>
                     </div>
                     <div className='bg-red h-[80px]'>
-                      <p className='text-sm capitalize text-slate-900 text-center'>sanlam maroc</p>
+                      <p className='text-sm capitalize text-slate-900 text-center'>entreprise</p>
                     </div>
                   </div>
              

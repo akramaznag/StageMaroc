@@ -73,8 +73,10 @@ Route::middleware(['auth:api', 'role:recruiter'])->prefix('enterprise')->group(f
 Route::middleware(['auth:api', 'role:recruiter'])->prefix('internship')->group(function () {
     Route::get('/', [InternshipController::class, 'index']);
     Route::get('/list', [InternshipController::class, 'internships_list']);
+    Route::get('/fetch_three', [InternshipController::class, 'get_three_recruiter_internships']);
     Route::post('/create', [InternshipController::class, 'create_internship']);
     Route::patch('/update', [InternshipController::class, 'update_internship']);
+    Route::post('/filter', [InternshipController::class, 'filter_recruiter_internship']);
    
 });
 Route::middleware(['auth:api', 'role:intern,recruiter'])->prefix('internship_application')->group(function () {

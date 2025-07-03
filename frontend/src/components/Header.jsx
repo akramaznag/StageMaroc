@@ -232,7 +232,7 @@ useEffect(() => {
       {/* Auth Menu */}
       <ul className='bg-red flex gap-x-7  list-none w-1/3 justify-end items-center  capitalize text-sm'>
         <Link to={`${basePath}/connexion`}>
-            <li className='rounded-sm !py-2 !px-4 cursor-pointer transition-all duration-300  hover:bg-blue-400 hover:text-white'>
+            <li className='rounded-sm !py-2 !px-4 cursor-pointer transition-all duration-300 bg-blue-400 text-white hover:underline'>
               connexion
             </li>
         </Link>

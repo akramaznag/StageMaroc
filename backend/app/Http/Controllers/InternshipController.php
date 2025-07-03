@@ -9,6 +9,7 @@ use App\Models\Internship;
 use App\Models\InternshipApplication;
 use App\Models\School;
 use App\Models\Specialty;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -114,6 +115,28 @@ class InternshipController extends Controller
 
         
     }
+    public function get_three_recruiter_internships(){
+        $enterprise=Enterprise::where('user_id',Auth::user()->id)->first();
+        $internships=Internship::where('enterprise_id',$enterprise->id)->orderBy('created_at','desc')->take(3)->get();
+        $month_internship_count = Internship::where('enterprise_id',$enterprise->id)
+        ->whereMonth('start_date',now()->month)->whereYear('start_date',now()->year)->get()->count();
+           return response()->json([
+            'status' => 'success',
+            'month_internship_count'=>$month_internship_count,
+            'internships' => $internships->map(function ($internship) {
+                return [
+                    'id' => $internship->id,
+                    'title' => $internship->title,
+                    'start_date' => $internship->start_date,
+                    'duration' => $internship->duration,
+                    'status'=>$internship->status
+                         ];
+                        }),
+                ]);
+
+
+        
+    }
     public function internship_details(int $id){
         $internship=Internship::find($id);
         $internship_application_count=InternshipApplication::where('internship_id',$internship->id)->get()->count();
@@ -155,8 +178,8 @@ class InternshipController extends Controller
 
 
     }
-    public function update_internship(Request $request){
-         $validator = Validator::make($request->all(), [
+   public function update_internship(Request $request){
+    $validator = Validator::make($request->all(), [
         'id' => 'required|exists:internships,id', 
         'user_id' => 'required|exists:users,id',
         'title' => 'required|string|max:255',
@@ -171,37 +194,42 @@ class InternshipController extends Controller
         'specialty_id' => 'required|exists:specialties,id',
         'city_id' => 'required|exists:cities,id',
         'enterprise_id' => 'required|exists:enterprises,id',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
-
-        $data = $validator->validated();
-        $internship = Internship::findOrFail($request->id);
-        $internship->update([
-            'enterprise_id' => $data['enterprise_id'],
-            'title' => $data['title'],
-            'type' => $data['type'],
-            'contract' => $data['contract'],
-            'start_date' => $data['start_date'],
-            'duration' => $data['duration'],
-            'remuneration' => $data['remuneration'],
-            'availability' => $data['availability'],
-            'profile_count' => $data['profile_count'],
-            'description' => $data['description'],
-            'specialty_id' => $data['specialty_id'],
-            'city_id' => $data['city_id'],
-        ]);        
-    return response()->json([
-        'status'=>'success',
-        'status_code'=>200,
-        'message'=>'the internship is updated successfully',
-        'internship'=>$internship,
+        'status' => 'nullable|in:expired,published',
     ]);
-        
-        
+
+    if ($validator->fails()) {
+        return response()->json(['errors' => $validator->errors()], 422);
     }
+
+    $data = $validator->validated();
+    $internship = Internship::findOrFail($data['id']);
+
+    $internship->update([
+        'enterprise_id' => $data['enterprise_id'],
+        'title' => $data['title'],
+        'type' => $data['type'],
+        'contract' => $data['contract'],
+        'start_date' => $data['start_date'],
+        'duration' => $data['duration'],
+        'remuneration' => $data['remuneration'],
+        'availability' => $data['availability'],
+        'profile_count' => $data['profile_count'],
+        'description' => $data['description'],
+        'specialty_id' => $data['specialty_id'],
+        'city_id' => $data['city_id'],
+    ]);  
+    $internship->status = $request->status == 'expired'?'expired':'published';
+    $internship->save();
+
+
+
+    return response()->json([
+        'status' => 'success',
+        'status_code' => 200,
+        'message' => 'The internship is updated successfully',
+        'internship' => $internship,
+    ]);
+}
     public function public_internships() {
     $specialties = Specialty::orderBy('specialite')->get();
     $cities = City::orderBy('name')->get(); // correction : 'name' au lieu de 'specialite'
@@ -353,6 +381,53 @@ class InternshipController extends Controller
             }),
      ], 200);
 
+
+    }
+    public function filter_recruiter_internship(Request $request){
+         $validated = $request->validate([
+            'status' => ['nullable', 'in:all,published,declined,expired'],
+            'search_value' => ['nullable', 'string', 'max:255'],
+        ]);
+        $recruiter=User::where('id', Auth::user()->id)->first();
+        $enterprise=Enterprise::where('user_id',$recruiter->id)->first();
+        $query = Internship::query();
+
+        $query->where('enterprise_id', $enterprise->id);
+
+        if (isset($validated['status']) && $validated['status'] !== 'all') {
+            $query->where('status', $validated['status']);
+        }
+        if (!empty($validated['search_value'])) {
+            $query->where('title', 'like', '%' . $validated['search_value'] . '%');
+        }
+
+        $internships = $query->get();
+       return response()->json([
+        'internships' => $internships->map(function ($internship) {
+            return [
+                'id' => $internship->id,
+                'title' => $internship->title,
+                'type' => $internship->type,
+                'contract' => $internship->contract,
+                'start_date' => $internship->start_date,
+                'duration' => $internship->duration,
+                'remuneration' => $internship->remuneration,
+                'availability' => $internship->availability,
+                'profile_count' => $internship->profile_count,
+                'description' => $internship->description,
+                'specialty_id' => $internship->specialty_id,
+                'city_id' => $internship->city_id,
+                'enterprise_id' => $internship->enterprise_id,
+                'created_at' => $internship->created_at,
+                'status' => $internship->status,
+
+                // Optional: include relationships if loaded
+                'specialty' => $internship->specialty ? $internship->specialty->specialite : null,
+                'city' => $internship->city ? $internship->city->name : null,
+                'enterprise' => $internship->enterprise ? $internship->enterprise->enterprise_name : null,
+            ];
+        }),
+]);
 
     }
 

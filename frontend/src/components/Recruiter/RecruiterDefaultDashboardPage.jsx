@@ -14,7 +14,11 @@ import {
   BuildingOfficeIcon,
   PlusIcon,
   PlusCircleIcon,
-  PaperClipIcon
+  PaperClipIcon,
+  XMarkIcon,
+  CheckIcon,
+  CheckCircleIcon,
+  NoSymbolIcon
 } from '@heroicons/react/24/outline';
 import { Link } from 'react-router-dom';
 import { MegaphoneIcon } from '@heroicons/react/24/solid';
@@ -26,6 +30,9 @@ import axios from 'axios';
 export default function RecruiterDefaultDashboardPage() {
   const [applicationDetails,setApplicationDetails]=useState([])
   const [internships,setInternships]=useState([]);
+  const [three_internships,setThree_internships]=useState([]);
+  const [monthInternship,setMonthInternship]=useState(0);
+
   const token=sessionStorage.getItem("token");
   
   useEffect(() => {
@@ -46,6 +53,15 @@ export default function RecruiterDefaultDashboardPage() {
       }).catch(err => console.log('error caught', err));
 
   }, []);
+
+    useEffect(()=>{
+        axios.get('http://127.0.0.1:8000/api/internship/fetch_three',{ headers:{ Authorization:`bearer ${token}`}}).then(res=>{
+          console.log(res.data)
+           setThree_internships(res.data.internships);
+           setMonthInternship(res.data.month_internship_count)
+           setDataLoading(false)
+        }).catch(err=>console.log(err))
+      },[])
 
   return (
    <>
@@ -103,13 +119,76 @@ export default function RecruiterDefaultDashboardPage() {
               <div className='flex flex-col w-[70%]  h-[250px] bg-blue'> 
                 <div className='bg-yellow h-[30px] flex justify-between'>
                   <p className='text-sm text-slate-500 uppercase'>3 Dernières Offres de Stage  </p>
-                  <Link to="" className='text-sm capitalize text-blue-500 flex gap-x-1 underline'>
+                  <Link to="/recruteur/dashboard/offres-stage/" className='text-sm capitalize text-blue-500 flex gap-x-1 underline'>
                    <EyeIcon className='w-5 h-5 text-blue-500'/>
                     <span>affier tout</span>
                   </Link>
                   </div>      
-                  <div className='bg-yellow w-full h-[220px]'>
-                    <div className='w-full flex flex-col items-center justify-center gap-y-3'>
+                  <div className='bg-yellow !py-2 w-full h-[270px]'>
+
+                    {
+                      three_internships.length>0 ?(
+                        <>
+
+                        <div className='flex flex-col gap-y-5 w-full'>
+                          {
+                            three_internships.map(e=>{
+                              
+                              return(
+
+                                <div className={`flex bg-gray-50  rounded-lg !p-2 gap-x-3 w-full justify-center`}>
+                                      <div className=' w-[11%] flex flex-col justify-between items-center'>
+                                         <div >
+
+                                            {
+                                          e.status==='published'?  
+                                            <CheckCircleIcon className='w-8 h-8 text-green-400 font-bold'/>
+                                          :
+                                          e.status==='expired'?
+                                          <NoSymbolIcon className='w-8 h-8 text-red-400 font-bold'/>
+                                          
+                                          :
+                                          <NoSymbolIcon className='w-8 h-8 text-blue-400 font-bold'/>
+                                          }
+                                          </div>
+                                        <div className={`text-sm first-letter:capitalize font-bold  ${e.status==='published'?'text-green-500':e.status==='expired'?'text-red-500':'text-blue-500'}`}>
+                                         
+                                            {
+                                            
+                                          e.status==='published'?  
+                                          <span>publié</span>
+                                           :
+                                          e.status==='expired'?
+                                          <span>expirée</span>                                          
+                                          :
+                                          'no publié'
+
+                                          }
+                                          
+                                        </div>
+                                    </div>
+                                    <div className='text-md capitalize bg-green font-bold text-center w-[59%]'>{e.title}</div>
+                                    <div className='bg-green text-sm w-[30%] flex flex-col justify-between'>
+                                      <div>
+                                        <span className='font-bold capitalize'>Démarrage:</span> <span className='text-sm'>{e.start_date}</span>
+
+                                      </div>
+                                      <div>
+
+                                        <span className='font-bold capitalize'>Durée:</span> <span>{e.duration}</span>
+                                      </div>
+                                      
+                                    </div>
+                                </div>
+                              )
+                            })
+                          }
+                    </div>
+                        </>
+                      )
+                      :
+                      <>
+                     <div className='w-full flex flex-col items-center justify-center gap-y-3'>
                       <div className=' bg-blue-200 h-[80px] w-[80px] flex justify-center items-center rounded-full'>
                         <DocumentIcon className='w-8 h-8 font-bold text-blue-500'/> 
                       </div>   
@@ -121,7 +200,10 @@ export default function RecruiterDefaultDashboardPage() {
                           <span>nouvelle offre de stage</span>
                            </Link>
                       </div>
-                    </div>
+                    </div> 
+                      </>
+                    }
+                   
                 </div>      
           
               </div>  
@@ -143,14 +225,14 @@ export default function RecruiterDefaultDashboardPage() {
                       <MegaphoneIcon className='w-8 h-8 text-slate-500'/>
                       <div className='flex flex-col '>
                        <div className='text-sm text-slate-500 first-letter:capitalize'> offres publiées ce mois </div>
-                       <div className='text-sm font-black'>0 </div>
+                       <div className='text-sm font-black'>{monthInternship} </div>
                       </div>
                     </div>
                      <div className='flex bg-green gap-x-3 items-start'>
                       <PaperAirplaneIcon className='w-8 h-8 font-light text-slate-500 rotate-270'/>
                       <div className='flex flex-col '>
                        <div className='text-sm text-slate-500 first-letter:capitalize'>Candidatures Reçues</div>
-                       <div className='text-sm font-black'>0 </div>
+                       <div className='text-sm font-black'>{applicationDetails.length}</div>
                       </div>
                     </div>
               

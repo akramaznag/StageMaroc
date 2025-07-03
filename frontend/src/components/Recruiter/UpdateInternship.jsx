@@ -38,8 +38,10 @@ export default function UpdateInternshipOffer() {
     const [educationlevel,setEducationLevel]=useState([]);
     const [specialties,setSpecialties]=useState([]);
     const [cities,setCities]=useState([]);
+    const [originalStatus, setOriginalStatus] = useState('');
+
      const [formData, setFormData] = useState({
-     status:'declined', 
+     status:'', 
      title: '',
      type: '',
      contract: 'stage fin étude',
@@ -59,6 +61,7 @@ export default function UpdateInternshipOffer() {
       axios.get(`http://127.0.0.1:8000/api/internship/details/${id}`,{ headers:{ Authorization:`bearer ${token}`}}).then(res=>{
       const internship = res.data.internship;
       console.log(internship)
+      setOriginalStatus(internship.status)
 
       setFormData({
         id:internship.id,
@@ -131,6 +134,7 @@ export default function UpdateInternshipOffer() {
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
+    console.log(formData.status)
     const form = new FormData();
     form.append('_method','patch')
     Object.entries(formData).forEach(([key, value]) => {
@@ -341,6 +345,9 @@ export default function UpdateInternshipOffer() {
                           <div className="text-sm font-medium first-letter:capitalize">Le stage est-il expiré ?</div>
 
                             <div className="flex items-center gap-x-2">
+                              {
+                                originalStatus!=='declined' &&(
+<>
 
                                   <div className="flex items-center gap-x-2">
                                      <input   type="radio" name="status" value="expired" onChange={HandleChange} checked={formData.status==='expired'}   id="expired"  className="peer hidden"  />
@@ -348,12 +355,15 @@ export default function UpdateInternshipOffer() {
                                      </label>
                                      <span className="text-sm font-medium capitalize">oui</span>
                                    </div>
-                                    <div className="flex items-center gap-x-2">
-                                     <input   type="radio" name="status" value="declined" onChange={HandleChange} checked={formData.status==='declined'}   id="declined"  className="peer hidden"  />
-                                     <label  htmlFor="declined"   className="w-4 h-4 rounded-full border-2 border-gray-400 peer-checked:border-blue-500 peer-checked:ring-1 peer-checked:ring-blue-500 peer-checked:ring-offset-1 cursor-pointer transition" >
+                                      <div className="flex items-center gap-x-2">
+                                     <input   type="radio" name="status" value="published" onChange={HandleChange} checked={formData.status==="published"}   id="published"  className="peer hidden"  />
+                                     <label  htmlFor="published"   className="w-4 h-4 rounded-full border-2 border-gray-400 peer-checked:border-blue-500 peer-checked:ring-1 peer-checked:ring-blue-500 peer-checked:ring-offset-1 cursor-pointer transition" >
                                      </label>
-                                     <span className="text-sm font-medium capitalize">no</span>
+                                     <span className="text-sm font-medium capitalize">non</span>
                                    </div>
+                                    </>
+                                )
+                              }
                              </div>                                                
                            </div>
                        </div>
