@@ -69,7 +69,7 @@ Route::middleware(['auth:api', 'role:recruiter'])->prefix('enterprise')->group(f
     
 });
 
-//create internship routes
+// internship routes
 Route::middleware(['auth:api', 'role:recruiter'])->prefix('internship')->group(function () {
     Route::get('/', [InternshipController::class, 'index']);
     Route::get('/list', [InternshipController::class, 'internships_list']);

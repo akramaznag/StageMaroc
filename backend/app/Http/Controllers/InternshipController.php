@@ -83,6 +83,8 @@ class InternshipController extends Controller
     public function internships_list(){
         $enterprise=Enterprise::where('user_id',Auth::user()->id)->first();
         $internships=Internship::where('enterprise_id',$enterprise->id)->orderBy('title')->get();
+      
+
            return response()->json([
             'status' => 'success',
             'internships' => $internships->map(function ($internship) {
@@ -102,6 +104,7 @@ class InternshipController extends Controller
                     'enterprise_id' => $internship->enterprise_id,
                     'created_at'=>$internship->created_at,
                     'status'=>$internship->status,
+                    'applicationsCount'=>InternshipApplication::where('internship_id', $internship->id)->count(),
 
                     // Optional: include relationships if loaded
                     'specialty' => $internship->specialty ? $internship->specialty->specialite : null,

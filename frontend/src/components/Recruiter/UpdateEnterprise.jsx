@@ -230,8 +230,8 @@ const handleRemovePhoto=()=>{
         
                             <CheckCircleIcon className='w-7 h-7 text-green-400 relative bottom-2'/>
                             <div className='flex flex-col gapy-y-2'>
-                                <div className='first-letter:capitalize font-bold text-sm text-black'>candidature envoyé</div>
-                                <div className='text-[12px] first-letter:capitalize text-slate-500'>candidature envoyé avec success</div>
+                                <div className='first-letter:capitalize font-bold text-sm text-black'>l'Enterprise a été modifiée</div>
+                                <div className='text-[12px] first-letter:capitalize text-slate-500'>l'Enterprise a été modifiéeuccess</div>
                             </div>
                           </div>
                             

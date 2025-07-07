@@ -189,7 +189,7 @@ useEffect(()=>{
                                                 <div className={`capitalize text-sm text-white`}>{e.status!=='published'? 'publier':'publié'}</div>
                                             </div> */}
                                               <div className={`col-span-4  ${ e.status!== 'declined' ? 'bg-gray-500 cursor-pointer ': 'opacity-50 bg-gray-300 cursor-not-allowed'}  flex justify-center items-center gap-x-2 !p-3 rounded-lg  w-full`}>
-                                              <div className='flex justify-center items-center !px-1 !py-0.5 bg-white rounded-4xl text-slate-500 font-bold'>{e.internship_application_count || 0}</div>
+                                              <div className='flex justify-center items-center !px-1 !py-0.5 bg-white rounded-4xl text-slate-500 font-bold'>{e.applicationsCount || 0}</div>
                                               <div className='capitalize text-sm text-white'>candidature</div>
                                             </div>
                                           </div>
