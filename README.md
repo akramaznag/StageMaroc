@@ -1,6 +1,9 @@
-# Stage Maroc – Application Web
+# Maroc Stage – Application Web
+![image](https://github.com/user-attachments/assets/9f2170e4-b2a5-4f91-8a67-7d940e2ffc12)
 
-**Stage Maroc** est une plateforme web dédiée à la mise en relation entre stagiaires et recruteurs, permettant la publication d’offres de stage et la gestion des candidatures.
+
+** Maroc Stage ** est une plateforme web dédiée à la mise en relation entre stagiaires et recruteurs, permettant la publication d’offres de stage et la gestion des candidatures.
+
 
 ---
 
